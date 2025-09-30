@@ -1,0 +1,129 @@
+{
+  "trendingVideos": [
+    {
+      "id": "1",
+      "title": "Understanding Poetry - Figures of Speech",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "20:15",
+      "category": "Poetry",
+      "views": "1.8M",
+      "likes": "42K"
+    },
+    {
+      "id": "2",
+      "title": "Grammar Fundamentals - Tenses",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "25:30",
+      "category": "Grammar",
+      "views": "2.5M",
+      "likes": "58K"
+    },
+    {
+      "id": "3",
+      "title": "Creative Writing Skills",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "18:45",
+      "category": "Writing",
+      "views": "1.2M",
+      "likes": "35K"
+    },
+    {
+      "id": "4",
+      "title": "Reading Comprehension Techniques",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "22:20",
+      "category": "Reading",
+      "views": "2.1M",
+      "likes": "48K"
+    },
+    {
+      "id": "5",
+      "title": "Vocabulary Building - Word Power",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "16:40",
+      "category": "Vocabulary",
+      "views": "1.9M",
+      "likes": "44K"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "1",
+      "title": "A Tale of Two Birds",
+      "description": "Moral stories and their lessons for character building",
+      "progress": 100,
+      "duration": "1h 30m",
+      "lessons": 6
+    },
+    {
+      "id": "2",
+      "title": "The Friendly Mongoose",
+      "description": "Understanding plot, characters, and moral values",
+      "progress": 92,
+      "duration": "1h 45m",
+      "lessons": 7
+    },
+    {
+      "id": "3",
+      "title": "The Shepherd's Treasure",
+      "description": "Folk tales and their cultural significance",
+      "progress": 78,
+      "duration": "1h 20m",
+      "lessons": 5
+    },
+    {
+      "id": "4",
+      "title": "The Old-Clock Shop",
+      "description": "Poetry appreciation and literary devices",
+      "progress": 65,
+      "duration": "2h 10m",
+      "lessons": 8
+    },
+    {
+      "id": "5",
+      "title": "Tansen",
+      "description": "Biography and historical narratives",
+      "progress": 50,
+      "duration": "1h 55m",
+      "lessons": 6
+    }
+  ],
+  "books": [
+    {
+      "id": "1",
+      "title": "Honeysuckle - English Reader",
+      "description": "NCERT English textbook for Class 6",
+      "cover": "/api/placeholder/300/400",
+      "type": "Textbook",
+      "publisher": "NCERT",
+      "rating": 4.5
+    },
+    {
+      "id": "2",
+      "title": "A Pact with the Sun",
+      "description": "Supplementary reader with additional stories",
+      "cover": "/api/placeholder/300/400",
+      "type": "Reader",
+      "publisher": "NCERT",
+      "rating": 4.6
+    },
+    {
+      "id": "3",
+      "title": "English Grammar and Composition",
+      "description": "Comprehensive grammar guide with exercises",
+      "cover": "/api/placeholder/300/400",
+      "type": "Grammar",
+      "publisher": "Oxford",
+      "rating": 4.8
+    },
+    {
+      "id": "4",
+      "title": "Word Power Made Easy",
+      "description": "Vocabulary building and word usage",
+      "cover": "/api/placeholder/300/400",
+      "type": "Vocabulary",
+      "publisher": "Goyal Brothers",
+      "rating": 4.7
+    }
+  ]
+}

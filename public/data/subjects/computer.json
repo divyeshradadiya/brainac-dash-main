@@ -1,0 +1,129 @@
+{
+  "trendingVideos": [
+    {
+      "id": "1",
+      "title": "Introduction to Programming - Scratch",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "22:30",
+      "category": "Programming",
+      "views": "2.8M",
+      "likes": "68K"
+    },
+    {
+      "id": "2",
+      "title": "Computer Hardware Basics",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "18:45",
+      "category": "Hardware",
+      "views": "1.9M",
+      "likes": "45K"
+    },
+    {
+      "id": "3",
+      "title": "Internet Safety and Digital Citizenship",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "16:20",
+      "category": "Digital Literacy",
+      "views": "1.5M",
+      "likes": "38K"
+    },
+    {
+      "id": "4",
+      "title": "Creating Presentations with PowerPoint",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "25:15",
+      "category": "Applications",
+      "views": "2.2M",
+      "likes": "52K"
+    },
+    {
+      "id": "5",
+      "title": "Basic HTML and Web Design",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "28:40",
+      "category": "Web Development",
+      "views": "3.1M",
+      "likes": "72K"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "1",
+      "title": "Introduction to Computer",
+      "description": "Basic computer concepts and components",
+      "progress": 90,
+      "duration": "2h 00m",
+      "lessons": 8
+    },
+    {
+      "id": "2",
+      "title": "Operating Systems",
+      "description": "Understanding Windows and basic operations",
+      "progress": 78,
+      "duration": "2h 30m",
+      "lessons": 10
+    },
+    {
+      "id": "3",
+      "title": "Introduction to Programming",
+      "description": "Basic programming concepts using Scratch",
+      "progress": 65,
+      "duration": "3h 15m",
+      "lessons": 12
+    },
+    {
+      "id": "4",
+      "title": "Word Processing",
+      "description": "Creating documents with Microsoft Word",
+      "progress": 82,
+      "duration": "2h 45m",
+      "lessons": 9
+    },
+    {
+      "id": "5",
+      "title": "Internet and Web Browsing",
+      "description": "Safe internet usage and research skills",
+      "progress": 55,
+      "duration": "2h 20m",
+      "lessons": 7
+    }
+  ],
+  "books": [
+    {
+      "id": "1",
+      "title": "Computer Science for Class 6",
+      "description": "Comprehensive computer science textbook",
+      "cover": "/api/placeholder/300/400",
+      "type": "Textbook",
+      "publisher": "Kips Learning",
+      "rating": 4.6
+    },
+    {
+      "id": "2",
+      "title": "Scratch Programming for Kids",
+      "description": "Learn programming with visual blocks",
+      "cover": "/api/placeholder/300/400",
+      "type": "Programming",
+      "publisher": "Tech Age Kids",
+      "rating": 4.8
+    },
+    {
+      "id": "3",
+      "title": "Digital Literacy Handbook",
+      "description": "Safe and effective use of technology",
+      "cover": "/api/placeholder/300/400",
+      "type": "Guide",
+      "publisher": "Cyber Safe Foundation",
+      "rating": 4.7
+    },
+    {
+      "id": "4",
+      "title": "Microsoft Office for Students",
+      "description": "Complete guide to Office applications",
+      "cover": "/api/placeholder/300/400",
+      "type": "Reference",
+      "publisher": "BPB Publications",
+      "rating": 4.5
+    }
+  ]
+}

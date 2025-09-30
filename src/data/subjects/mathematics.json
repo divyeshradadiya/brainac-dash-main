@@ -1,0 +1,268 @@
+{
+  "trendingVideos": [
+    {
+      "id": "1",
+      "title": "Knowing Our Numbers",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "14:25",
+      "category": "Number System",
+      "views": "2.8M",
+      "likes": "58K"
+    },
+    {
+      "id": "2",
+      "title": "Whole Numbers",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "16:40",
+      "category": "Number System",
+      "views": "2.2M",
+      "likes": "45K"
+    },
+    {
+      "id": "3",
+      "title": "Playing With Numbers",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "18:15",
+      "category": "Number System",
+      "views": "3.1M",
+      "likes": "62K"
+    },
+    {
+      "id": "4",
+      "title": "Basic Geometrical Ideas",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "15:30",
+      "category": "Geometry",
+      "views": "2.5M",
+      "likes": "51K"
+    },
+    {
+      "id": "5",
+      "title": "Understanding Elementary Shapes",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "17:45",
+      "category": "Geometry",
+      "views": "2.9M",
+      "likes": "55K"
+    },
+    {
+      "id": "6",
+      "title": "Integers",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "13:20",
+      "category": "Number System",
+      "views": "2.0M",
+      "likes": "42K"
+    },
+    {
+      "id": "7",
+      "title": "Fractions",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "19:10",
+      "category": "Number System",
+      "views": "3.3M",
+      "likes": "65K"
+    },
+    {
+      "id": "8",
+      "title": "Decimals",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "16:55",
+      "category": "Number System",
+      "views": "2.4M",
+      "likes": "48K"
+    },
+    {
+      "id": "9",
+      "title": "Data Handling",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "14:35",
+      "category": "Statistics",
+      "views": "1.8M",
+      "likes": "38K"
+    },
+    {
+      "id": "10",
+      "title": "Mensuration",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "20:15",
+      "category": "Geometry",
+      "views": "2.7M",
+      "likes": "54K"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "1",
+      "title": "Knowing Our Numbers",
+      "description": "Understanding large numbers and their place values",
+      "progress": 100,
+      "duration": "3h 15m",
+      "lessons": 10
+    },
+    {
+      "id": "2",
+      "title": "Whole Numbers",
+      "description": "Properties and operations with whole numbers",
+      "progress": 85,
+      "duration": "2h 45m",
+      "lessons": 8
+    },
+    {
+      "id": "3",
+      "title": "Playing With Numbers",
+      "description": "Factors, multiples, and number patterns",
+      "progress": 70,
+      "duration": "3h 30m",
+      "lessons": 12
+    },
+    {
+      "id": "4",
+      "title": "Basic Geometrical Ideas",
+      "description": "Introduction to points, lines, and angles",
+      "progress": 45,
+      "duration": "2h 20m",
+      "lessons": 7
+    },
+    {
+      "id": "5",
+      "title": "Understanding Elementary Shapes",
+      "description": "Properties of different geometric shapes",
+      "progress": 60,
+      "duration": "3h 00m",
+      "lessons": 9
+    },
+    {
+      "id": "6",
+      "title": "Integers",
+      "description": "Positive and negative numbers with operations",
+      "progress": 25,
+      "duration": "2h 50m",
+      "lessons": 8
+    },
+    {
+      "id": "7",
+      "title": "Fractions",
+      "description": "Understanding fractions and their operations",
+      "progress": 80,
+      "duration": "4h 15m",
+      "lessons": 14
+    },
+    {
+      "id": "8",
+      "title": "Decimals",
+      "description": "Decimal numbers and their applications",
+      "progress": 35,
+      "duration": "3h 20m",
+      "lessons": 10
+    },
+    {
+      "id": "9",
+      "title": "Data Handling",
+      "description": "Collection, organization, and representation of data",
+      "progress": 15,
+      "duration": "2h 45m",
+      "lessons": 8
+    },
+    {
+      "id": "10",
+      "title": "Mensuration",
+      "description": "Perimeter, area, and volume calculations",
+      "progress": 5,
+      "duration": "3h 45m",
+      "lessons": 11
+    }
+  ],
+  "books": [
+    {
+      "id": "1",
+      "title": "The Brainac Big Book for Mathematics",
+      "description": "Foundation Class 6 - Complete Math Guide",
+      "cover": "/api/placeholder/300/400",
+      "type": "Foundation",
+      "publisher": "Brainac",
+      "rating": 4.9
+    },
+    {
+      "id": "2",
+      "title": "NCERT Mathematics Textbook for Class 6",
+      "description": "Complete solutions and step-by-step explanations",
+      "cover": "/api/placeholder/300/400",
+      "type": "Textbook",
+      "publisher": "NCERT",
+      "rating": 4.7
+    },
+    {
+      "id": "3",
+      "title": "NCERT Exemplar Mathematics Class 6",
+      "description": "Advanced problems and detailed solutions",
+      "cover": "/api/placeholder/300/400",
+      "type": "Practice",
+      "publisher": "NCERT",
+      "rating": 4.8
+    },
+    {
+      "id": "4",
+      "title": "Pearson IIT Foundation Mathematics",
+      "description": "Advanced concepts for competitive exams",
+      "cover": "/api/placeholder/300/400",
+      "type": "Foundation",
+      "publisher": "Pearson",
+      "rating": 4.9
+    },
+    {
+      "id": "5",
+      "title": "Mathematics Olympiad Foundation",
+      "description": "Preparation guide for math olympiads",
+      "cover": "/api/placeholder/300/400",
+      "type": "Olympiad",
+      "publisher": "SOF",
+      "rating": 4.6
+    },
+    {
+      "id": "6",
+      "title": "MTG Mathematics Workbook",
+      "description": "Comprehensive practice workbook with solutions",
+      "cover": "/api/placeholder/300/400",
+      "type": "Workbook",
+      "publisher": "MTG",
+      "rating": 4.5
+    },
+    {
+      "id": "7",
+      "title": "Arihant Mathematics Guide",
+      "description": "Complete study material with sample papers",
+      "cover": "/api/placeholder/300/400",
+      "type": "Guide",
+      "publisher": "Arihant",
+      "rating": 4.4
+    },
+    {
+      "id": "8",
+      "title": "Oswaal Mathematics Question Bank",
+      "description": "Previous year questions with detailed solutions",
+      "cover": "/api/placeholder/300/400",
+      "type": "Question Bank",
+      "publisher": "Oswaal",
+      "rating": 4.7
+    },
+    {
+      "id": "9",
+      "title": "Mathematics Lab Manual",
+      "description": "Practical activities and experiments",
+      "cover": "/api/placeholder/300/400",
+      "type": "Lab Manual",
+      "publisher": "NCERT",
+      "rating": 4.3
+    },
+    {
+      "id": "10",
+      "title": "Mathematics Dictionary & Reference",
+      "description": "Comprehensive math terms and formulas",
+      "cover": "/api/placeholder/300/400",
+      "type": "Reference",
+      "publisher": "Collins",
+      "rating": 4.8
+    }
+  ]
+}

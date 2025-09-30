@@ -1,0 +1,129 @@
+{
+  "trendingVideos": [
+    {
+      "id": "1",
+      "title": "Basic Drawing Techniques - Pencil Sketching",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "25:30",
+      "category": "Drawing",
+      "views": "1.8M",
+      "likes": "45K"
+    },
+    {
+      "id": "2",
+      "title": "Color Theory and Painting",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "22:15",
+      "category": "Painting",
+      "views": "1.5M",
+      "likes": "38K"
+    },
+    {
+      "id": "3",
+      "title": "Craft Making - Paper Art",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "18:45",
+      "category": "Craft",
+      "views": "2.1M",
+      "likes": "52K"
+    },
+    {
+      "id": "4",
+      "title": "Clay Modeling and Sculpture",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "28:20",
+      "category": "Sculpture",
+      "views": "1.2M",
+      "likes": "32K"
+    },
+    {
+      "id": "5",
+      "title": "Digital Art Basics",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "24:40",
+      "category": "Digital Art",
+      "views": "2.3M",
+      "likes": "58K"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "1",
+      "title": "Introduction to Art",
+      "description": "Understanding different forms of artistic expression",
+      "progress": 100,
+      "duration": "1h 30m",
+      "lessons": 6
+    },
+    {
+      "id": "2",
+      "title": "Drawing Fundamentals",
+      "description": "Basic shapes, lines, and perspective drawing",
+      "progress": 95,
+      "duration": "2h 15m",
+      "lessons": 8
+    },
+    {
+      "id": "3",
+      "title": "Color and Painting",
+      "description": "Color mixing, painting techniques, and composition",
+      "progress": 88,
+      "duration": "2h 45m",
+      "lessons": 10
+    },
+    {
+      "id": "4",
+      "title": "Crafts and Design",
+      "description": "Creating decorative objects and design principles",
+      "progress": 92,
+      "duration": "2h 00m",
+      "lessons": 7
+    },
+    {
+      "id": "5",
+      "title": "Art Appreciation",
+      "description": "Famous artists and their masterpieces",
+      "progress": 78,
+      "duration": "1h 45m",
+      "lessons": 5
+    }
+  ],
+  "books": [
+    {
+      "id": "1",
+      "title": "Creative Arts for Class 6",
+      "description": "Comprehensive art and craft textbook",
+      "cover": "/api/placeholder/300/400",
+      "type": "Textbook",
+      "publisher": "Art Education Board",
+      "rating": 4.7
+    },
+    {
+      "id": "2",
+      "title": "Drawing Made Easy",
+      "description": "Step-by-step drawing tutorials for beginners",
+      "cover": "/api/placeholder/300/400",
+      "type": "Tutorial",
+      "publisher": "Artist's Press",
+      "rating": 4.8
+    },
+    {
+      "id": "3",
+      "title": "Craft Activities for Students",
+      "description": "Fun and educational craft projects",
+      "cover": "/api/placeholder/300/400",
+      "type": "Activity Book",
+      "publisher": "Creative Kids",
+      "rating": 4.6
+    },
+    {
+      "id": "4",
+      "title": "Famous Artists and Their Works",
+      "description": "Art history and appreciation for young learners",
+      "cover": "/api/placeholder/300/400",
+      "type": "Reference",
+      "publisher": "Museum Publications",
+      "rating": 4.9
+    }
+  ]
+}

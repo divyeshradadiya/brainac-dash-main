@@ -1,0 +1,129 @@
+{
+  "trendingVideos": [
+    {
+      "id": "1",
+      "title": "Ancient Civilizations - Indus Valley",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "24:15",
+      "category": "Ancient History",
+      "views": "1.5M",
+      "likes": "38K"
+    },
+    {
+      "id": "2",
+      "title": "Medieval India - Mughal Empire",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "28:30",
+      "category": "Medieval History",
+      "views": "2.1M",
+      "likes": "52K"
+    },
+    {
+      "id": "3",
+      "title": "Freedom Struggle - Indian Independence",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "32:45",
+      "category": "Modern History",
+      "views": "3.2M",
+      "likes": "78K"
+    },
+    {
+      "id": "4",
+      "title": "World War II - Global Impact",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "26:20",
+      "category": "World History",
+      "views": "2.8M",
+      "likes": "65K"
+    },
+    {
+      "id": "5",
+      "title": "Archaeological Sources",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "18:40",
+      "category": "Archaeology",
+      "views": "1.3M",
+      "likes": "32K"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "1",
+      "title": "What, Where, How and When?",
+      "description": "Introduction to history and historical sources",
+      "progress": 85,
+      "duration": "2h 15m",
+      "lessons": 8
+    },
+    {
+      "id": "2",
+      "title": "From Hunting-Gathering to Growing Food",
+      "description": "Early human societies and agricultural revolution",
+      "progress": 72,
+      "duration": "2h 45m",
+      "lessons": 10
+    },
+    {
+      "id": "3",
+      "title": "In the Earliest Cities",
+      "description": "Harappan civilization and urban planning",
+      "progress": 68,
+      "duration": "3h 00m",
+      "lessons": 12
+    },
+    {
+      "id": "4",
+      "title": "What Books and Burials Tell Us",
+      "description": "Vedic period and early Indian literature",
+      "progress": 55,
+      "duration": "2h 30m",
+      "lessons": 9
+    },
+    {
+      "id": "5",
+      "title": "Kingdoms, Kings and an Early Republic",
+      "description": "Political systems in ancient India",
+      "progress": 40,
+      "duration": "2h 50m",
+      "lessons": 11
+    }
+  ],
+  "books": [
+    {
+      "id": "1",
+      "title": "Our Pasts - I",
+      "description": "NCERT History textbook for Class 6",
+      "cover": "/api/placeholder/300/400",
+      "type": "Textbook",
+      "publisher": "NCERT",
+      "rating": 4.4
+    },
+    {
+      "id": "2",
+      "title": "A Brief History of Ancient India",
+      "description": "Comprehensive guide to ancient Indian history",
+      "cover": "/api/placeholder/300/400",
+      "type": "Reference",
+      "publisher": "Orient BlackSwan",
+      "rating": 4.7
+    },
+    {
+      "id": "3",
+      "title": "World History for Young Readers",
+      "description": "Global historical perspectives for students",
+      "cover": "/api/placeholder/300/400",
+      "type": "Reader",
+      "publisher": "Penguin",
+      "rating": 4.6
+    },
+    {
+      "id": "4",
+      "title": "Archaeological Wonders of India",
+      "description": "Visual guide to Indian archaeological sites",
+      "cover": "/api/placeholder/300/400",
+      "type": "Reference",
+      "publisher": "National Book Trust",
+      "rating": 4.8
+    }
+  ]
+}

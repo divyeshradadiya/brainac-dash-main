@@ -1,0 +1,129 @@
+{
+  "trendingVideos": [
+    {
+      "id": "1",
+      "title": "Introduction to Algebra",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "15:20",
+      "category": "Algebra",
+      "views": "3.5M",
+      "likes": "78K"
+    },
+    {
+      "id": "2",
+      "title": "Fractions and Decimals",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "18:45",
+      "category": "Arithmetic",
+      "views": "2.8M",
+      "likes": "62K"
+    },
+    {
+      "id": "3",
+      "title": "Basic Geometry Concepts",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "22:10",
+      "category": "Geometry",
+      "views": "4.1M",
+      "likes": "89K"
+    },
+    {
+      "id": "4",
+      "title": "Playing with Numbers",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "16:30",
+      "category": "Number Theory",
+      "views": "2.2M",
+      "likes": "51K"
+    },
+    {
+      "id": "5",
+      "title": "Ratio and Proportion",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "19:25",
+      "category": "Algebra",
+      "views": "3.0M",
+      "likes": "68K"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "1",
+      "title": "Knowing Our Numbers",
+      "description": "Understanding large numbers, place value, and number systems",
+      "progress": 95,
+      "duration": "3h 15m",
+      "lessons": 12
+    },
+    {
+      "id": "2",
+      "title": "Whole Numbers",
+      "description": "Properties and operations with whole numbers",
+      "progress": 88,
+      "duration": "2h 45m",
+      "lessons": 10
+    },
+    {
+      "id": "3",
+      "title": "Playing with Numbers",
+      "description": "Factors, multiples, and divisibility rules",
+      "progress": 75,
+      "duration": "2h 30m",
+      "lessons": 8
+    },
+    {
+      "id": "4",
+      "title": "Basic Geometrical Ideas",
+      "description": "Introduction to points, lines, angles, and shapes",
+      "progress": 60,
+      "duration": "3h 00m",
+      "lessons": 11
+    },
+    {
+      "id": "5",
+      "title": "Understanding Elementary Shapes",
+      "description": "Triangles, quadrilaterals, and circles",
+      "progress": 42,
+      "duration": "2h 20m",
+      "lessons": 9
+    }
+  ],
+  "books": [
+    {
+      "id": "1",
+      "title": "The Brainac Big Book for Mathematics",
+      "description": "Foundation Class 6 - Complete Mathematics Guide",
+      "cover": "/api/placeholder/300/400",
+      "type": "Foundation",
+      "publisher": "Brainac",
+      "rating": 4.9
+    },
+    {
+      "id": "2",
+      "title": "NCERT Mathematics Textbook",
+      "description": "Official curriculum textbook with exercises",
+      "cover": "/api/placeholder/300/400",
+      "type": "Textbook",
+      "publisher": "NCERT",
+      "rating": 4.7
+    },
+    {
+      "id": "3",
+      "title": "RD Sharma Mathematics Class 6",
+      "description": "Comprehensive practice problems and solutions",
+      "cover": "/api/placeholder/300/400",
+      "type": "Practice",
+      "publisher": "RD Sharma",
+      "rating": 4.8
+    },
+    {
+      "id": "4",
+      "title": "Mathematics Olympiad Foundation",
+      "description": "Advanced problems for competitive preparation",
+      "cover": "/api/placeholder/300/400",
+      "type": "Foundation",
+      "publisher": "Arihant",
+      "rating": 4.6
+    }
+  ]
+}

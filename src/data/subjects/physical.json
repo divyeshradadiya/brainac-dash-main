@@ -1,0 +1,129 @@
+{
+  "trendingVideos": [
+    {
+      "id": "1",
+      "title": "Basic Fitness Exercises for Students",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "15:30",
+      "category": "Fitness",
+      "views": "2.5M",
+      "likes": "62K"
+    },
+    {
+      "id": "2",
+      "title": "Sports Skills - Football Basics",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "20:45",
+      "category": "Sports",
+      "views": "1.8M",
+      "likes": "45K"
+    },
+    {
+      "id": "3",
+      "title": "Yoga and Flexibility for Kids",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "18:20",
+      "category": "Yoga",
+      "views": "1.6M",
+      "likes": "38K"
+    },
+    {
+      "id": "4",
+      "title": "Track and Field Events",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "22:15",
+      "category": "Athletics",
+      "views": "1.4M",
+      "likes": "35K"
+    },
+    {
+      "id": "5",
+      "title": "Healthy Lifestyle Habits",
+      "thumbnail": "/api/placeholder/400/225",
+      "duration": "16:40",
+      "category": "Health",
+      "views": "2.1M",
+      "likes": "52K"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "1",
+      "title": "Physical Fitness and Health",
+      "description": "Understanding the importance of physical fitness",
+      "progress": 95,
+      "duration": "1h 45m",
+      "lessons": 6
+    },
+    {
+      "id": "2",
+      "title": "Basic Movement Skills",
+      "description": "Fundamental motor skills and coordination",
+      "progress": 88,
+      "duration": "2h 00m",
+      "lessons": 8
+    },
+    {
+      "id": "3",
+      "title": "Sports and Games",
+      "description": "Introduction to various sports and their rules",
+      "progress": 82,
+      "duration": "2h 30m",
+      "lessons": 10
+    },
+    {
+      "id": "4",
+      "title": "Nutrition and Wellness",
+      "description": "Healthy eating habits and lifestyle choices",
+      "progress": 78,
+      "duration": "1h 30m",
+      "lessons": 5
+    },
+    {
+      "id": "5",
+      "title": "Safety in Sports",
+      "description": "Injury prevention and safety measures",
+      "progress": 72,
+      "duration": "1h 20m",
+      "lessons": 4
+    }
+  ],
+  "books": [
+    {
+      "id": "1",
+      "title": "Physical Education for Class 6",
+      "description": "Complete guide to physical education and sports",
+      "cover": "/api/placeholder/300/400",
+      "type": "Textbook",
+      "publisher": "Sports Authority",
+      "rating": 4.5
+    },
+    {
+      "id": "2",
+      "title": "Fitness for Young Athletes",
+      "description": "Training and conditioning for student athletes",
+      "cover": "/api/placeholder/300/400",
+      "type": "Training Guide",
+      "publisher": "Athletic Performance",
+      "rating": 4.7
+    },
+    {
+      "id": "3",
+      "title": "Sports Rules and Regulations",
+      "description": "Official rules for various sports and games",
+      "cover": "/api/placeholder/300/400",
+      "type": "Reference",
+      "publisher": "Sports Federation",
+      "rating": 4.6
+    },
+    {
+      "id": "4",
+      "title": "Healthy Living for Kids",
+      "description": "Nutrition and wellness guide for children",
+      "cover": "/api/placeholder/300/400",
+      "type": "Health Guide",
+      "publisher": "Wellness Publications",
+      "rating": 4.8
+    }
+  ]
+}

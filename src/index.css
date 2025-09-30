@@ -1,0 +1,524 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Advanced Design System - 15+ Years UI/UX Expertise */
+/* Color Psychology: Blue for trust & learning, Green for growth, Orange for energy, Purple for creativity */
+
+@layer base {
+  :root {
+    /* Primary Color Palette - Trust & Learning */
+    --primary: 210 100% 50%; /* Vibrant Blue - Trust, Intelligence, Learning */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 210 100% 95%;
+    --primary-dark: 210 100% 30%;
+
+    /* Secondary Color Palette - Growth & Success */
+    --secondary: 142 76% 36%; /* Emerald Green - Growth, Success, Achievement */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 142 76% 95%;
+    --secondary-dark: 142 76% 25%;
+
+    /* Accent Color Palette - Energy & Motivation */
+    --accent: 25 95% 53%; /* Vibrant Orange - Energy, Motivation, Creativity */
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 25 95% 95%;
+    --accent-dark: 25 95% 35%;
+
+    /* Tertiary Color Palette - Creativity & Innovation */
+    --tertiary: 262 83% 58%; /* Purple - Creativity, Innovation, Wisdom */
+    --tertiary-foreground: 0 0% 100%;
+    --tertiary-light: 262 83% 95%;
+    --tertiary-dark: 262 83% 35%;
+
+    /* Neutral Color Palette - Professional & Readable */
+    --background: 0 0% 100%; /* Pure White - Clean, Professional */
+    --foreground: 220 13% 18%; /* Dark Charcoal - Excellent Readability */
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
+
+    /* Semantic Color Palette - Clear Communication */
+    --success: 142 76% 36%; /* Success Green */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%; /* Warning Amber */
+    --warning-foreground: 220 13% 18%;
+    --destructive: 0 84% 60%; /* Error Red */
+    --destructive-foreground: 0 0% 100%;
+    --info: 210 100% 50%; /* Info Blue */
+    --info-foreground: 0 0% 100%;
+
+    /* Supporting Colors - Subtle & Elegant */
+    --muted: 220 14% 96%; /* Light Gray - Subtle Backgrounds */
+    --muted-foreground: 220 13% 46%; /* Medium Gray - Secondary Text */
+    --border: 220 13% 91%; /* Border Gray - Subtle Divisions */
+    --input: 220 13% 96%; /* Input Gray - Form Fields */
+    --ring: 210 100% 50%; /* Focus Ring - Accessibility */
+
+    /* Advanced Design Tokens */
+    --radius: 1rem; /* Modern Border Radius */
+    --radius-sm: 0.5rem;
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+
+    /* Sophisticated Shadows - Depth & Hierarchy */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    /* Custom Shadows for Cards */
+    --shadow-card: 0 4px 20px rgb(0 0 0 / 0.08);
+    --shadow-card-hover: 0 8px 30px rgb(0 0 0 / 0.12);
+    --shadow-soft: 0 2px 8px rgb(0 0 0 / 0.06);
+
+    /* Advanced Gradients - Subtle & Modern */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 50%), hsl(210 100% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 46%));
+    --gradient-accent: linear-gradient(135deg, hsl(25 95% 53%), hsl(25 95% 63%));
+    --gradient-tertiary: linear-gradient(135deg, hsl(262 83% 58%), hsl(262 83% 68%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 50%), hsl(262 83% 58%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 46%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100% / 0.95), hsl(0 0% 98% / 0.95));
+
+    /* Sidebar Design - Professional & Accessible */
+    --sidebar-background: 220 14% 98%; /* Light Gray - Professional */
+    --sidebar-foreground: 220 13% 18%; /* Dark Charcoal - Readable */
+    --sidebar-primary: 210 100% 50%; /* Blue - Active States */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 94%; /* Hover States */
+    --sidebar-accent-foreground: 220 13% 18%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 210 100% 50%;
+
+    /* Advanced Animations - Smooth & Engaging */
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    /* Typography Scale - Professional & Readable */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+
+    /* Spacing Scale - Consistent & Harmonious */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
+  }
+
+  .dark {
+    /* Primary Color Palette - Trust & Learning (Dark) */
+    --primary: 210 100% 60%; /* Brighter Blue for Dark Mode */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 210 100% 20%;
+    --primary-dark: 210 100% 40%;
+
+    /* Secondary Color Palette - Growth & Success (Dark) */
+    --secondary: 142 76% 46%; /* Brighter Green for Dark Mode */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 142 76% 20%;
+    --secondary-dark: 142 76% 35%;
+
+    /* Accent Color Palette - Energy & Motivation (Dark) */
+    --accent: 25 95% 63%; /* Brighter Orange for Dark Mode */
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 25 95% 20%;
+    --accent-dark: 25 95% 45%;
+
+    /* Tertiary Color Palette - Creativity & Innovation (Dark) */
+    --tertiary: 262 83% 68%; /* Brighter Purple for Dark Mode */
+    --tertiary-foreground: 0 0% 100%;
+    --tertiary-light: 262 83% 20%;
+    --tertiary-dark: 262 83% 45%;
+
+    /* Neutral Color Palette - Professional & Readable (Dark) */
+    --background: 220 13% 8%; /* Very Dark Background */
+    --foreground: 220 13% 95%; /* Light Text for Dark Background */
+    --card: 220 13% 12%; /* Dark Card Background */
+    --card-foreground: 220 13% 95%;
+    --popover: 220 13% 12%;
+    --popover-foreground: 220 13% 95%;
+
+    /* Semantic Color Palette - Clear Communication (Dark) */
+    --success: 142 76% 46%; /* Brighter Success Green */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 60%; /* Brighter Warning Amber */
+    --warning-foreground: 220 13% 8%;
+    --destructive: 0 84% 70%; /* Brighter Error Red */
+    --destructive-foreground: 0 0% 100%;
+    --info: 210 100% 60%; /* Brighter Info Blue */
+    --info-foreground: 0 0% 100%;
+
+    /* Supporting Colors - Subtle & Elegant (Dark) */
+    --muted: 220 13% 16%; /* Dark Gray - Subtle Backgrounds */
+    --muted-foreground: 220 13% 65%; /* Light Gray - Secondary Text */
+    --border: 220 13% 25%; /* Dark Border Gray */
+    --input: 220 13% 16%; /* Dark Input Gray */
+    --ring: 210 100% 60%; /* Brighter Focus Ring */
+
+    /* Sophisticated Shadows - Depth & Hierarchy (Dark) */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+
+    /* Custom Shadows for Cards (Dark) */
+    --shadow-card: 0 4px 20px rgb(0 0 0 / 0.3);
+    --shadow-card-hover: 0 8px 30px rgb(0 0 0 / 0.4);
+    --shadow-soft: 0 2px 8px rgb(0 0 0 / 0.2);
+
+    /* Advanced Gradients - Subtle & Modern (Dark) */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 60%), hsl(210 100% 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(142 76% 46%), hsl(142 76% 56%));
+    --gradient-accent: linear-gradient(135deg, hsl(25 95% 63%), hsl(25 95% 73%));
+    --gradient-tertiary: linear-gradient(135deg, hsl(262 83% 68%), hsl(262 83% 78%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 60%), hsl(262 83% 68%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 46%), hsl(142 76% 56%));
+    --gradient-card: linear-gradient(135deg, hsl(220 13% 12% / 0.95), hsl(220 13% 10% / 0.95));
+
+    /* Sidebar Design - Professional & Accessible (Dark) */
+    --sidebar-background: 220 13% 10%; /* Dark Gray - Professional */
+    --sidebar-foreground: 220 13% 95%; /* Light Text - Readable */
+    --sidebar-primary: 210 100% 60%; /* Brighter Blue - Active States */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 13% 16%; /* Darker Hover States */
+    --sidebar-accent-foreground: 220 13% 95%;
+    --sidebar-border: 220 13% 25%;
+    --sidebar-ring: 210 100% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Advanced Typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 { @apply text-4xl; }
+  h2 { @apply text-3xl; }
+  h3 { @apply text-2xl; }
+  h4 { @apply text-xl; }
+  h5 { @apply text-lg; }
+  h6 { @apply text-base; }
+}
+
+@layer components {
+  /* Advanced Card System - Professional & Engaging */
+  .card-modern {
+    @apply bg-card border border-border/50 rounded-xl shadow-card transition-all duration-300;
+    backdrop-filter: blur(10px);
+  }
+
+  .card-modern:hover {
+    @apply shadow-card-hover border-border/70 transform -translate-y-1;
+  }
+
+  .card-elevated {
+    @apply bg-card border-0 rounded-xl shadow-lg transition-all duration-300;
+    backdrop-filter: blur(20px);
+  }
+
+  .card-elevated:hover {
+    @apply shadow-xl transform -translate-y-2;
+  }
+
+  .card-interactive {
+    @apply bg-card border border-border/50 rounded-xl shadow-card transition-all duration-300 cursor-pointer;
+    backdrop-filter: blur(10px);
+  }
+
+  .card-interactive:hover {
+    @apply shadow-card-hover border-primary/30 transform -translate-y-1 scale-[1.02];
+  }
+
+  .card-subtle {
+    @apply bg-card/50 border border-border/30 rounded-xl shadow-soft transition-all duration-300;
+    backdrop-filter: blur(5px);
+  }
+
+  .card-subtle:hover {
+    @apply shadow-md bg-card/70 border-border/50;
+  }
+
+  /* Advanced Button System - Accessible & Engaging */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary-dark transition-all duration-300;
+    @apply shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+    @apply focus:ring-2 focus:ring-primary/50 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary-dark transition-all duration-300;
+    @apply shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+    @apply focus:ring-2 focus:ring-secondary/50 focus:ring-offset-2;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-accent-foreground hover:bg-accent-dark transition-all duration-300;
+    @apply shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+    @apply focus:ring-2 focus:ring-accent/50 focus:ring-offset-2;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent hover:bg-muted/50 transition-all duration-300;
+    @apply hover:shadow-sm transform hover:-translate-y-0.5;
+  }
+
+  /* Advanced Navigation System - Professional & Accessible */
+  .nav-item {
+    @apply relative transition-all duration-300 ease-out;
+  }
+
+  .nav-item::before {
+    @apply content-[''] absolute left-0 top-0 h-full w-1 bg-primary scale-y-0 origin-center transition-transform duration-300 ease-out rounded-r;
+  }
+
+  .nav-item.active::before {
+    @apply scale-y-100;
+  }
+
+  .nav-item:hover::before {
+    @apply scale-y-75 bg-primary/60;
+  }
+
+  .nav-item.active {
+    @apply bg-primary/10 border border-primary/20 shadow-sm;
+  }
+
+  /* Advanced Progress System - Engaging & Informative */
+  .progress-modern {
+    @apply relative overflow-hidden rounded-full bg-muted;
+  }
+
+  .progress-modern::after {
+    @apply content-[''] absolute top-0 left-0 w-full h-full bg-primary;
+    animation: progress-shimmer 2s ease-in-out infinite;
+  }
+
+  .progress-bar {
+    @apply relative overflow-hidden rounded-full;
+  }
+
+  .progress-bar::after {
+    @apply content-[''] absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent;
+    animation: shimmer 2.5s infinite;
+  }
+
+  /* Advanced Badge System - Clear & Professional */
+  .badge-modern {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    @apply transition-all duration-300 hover:scale-105;
+  }
+
+  .badge-primary {
+    @apply bg-primary/10 text-primary border border-primary/20;
+  }
+
+  .badge-secondary {
+    @apply bg-secondary/10 text-secondary border border-secondary/20;
+  }
+
+  .badge-accent {
+    @apply bg-accent/10 text-accent border border-accent/20;
+  }
+
+  .badge-success {
+    @apply bg-success/10 text-success border border-success/20;
+  }
+
+  .badge-warning {
+    @apply bg-warning/10 text-warning border border-warning/20;
+  }
+
+  .badge-destructive {
+    @apply bg-destructive/10 text-destructive border border-destructive/20;
+  }
+
+  /* Advanced Input System - Professional & Accessible */
+  .input-modern {
+    @apply bg-background border-2 border-border focus:border-primary transition-all duration-300;
+    @apply rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary/20 focus:ring-offset-2;
+    @apply placeholder:text-muted-foreground/60;
+  }
+
+  .input-modern:focus {
+    @apply shadow-md transform scale-[1.02];
+  }
+
+  /* Advanced Avatar System - Professional & Engaging */
+  .avatar-modern {
+    @apply ring-2 ring-border/50 hover:ring-primary/50 transition-all duration-300;
+  }
+
+  .avatar-modern:hover {
+    @apply transform scale-105 shadow-lg;
+  }
+
+  /* Advanced Animation Classes */
+  
+  /* Custom Scrollbar Hiding */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-gentle {
+    animation: bounce-gentle 2s infinite;
+  }
+
+  /* Advanced Layout Classes */
+  .layout-modern {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .grid-modern {
+    @apply grid gap-6 sm:gap-8 lg:gap-10;
+  }
+
+  .section-modern {
+    @apply py-8 sm:py-12 lg:py-16;
+  }
+
+  /* Advanced Responsive Design */
+  .responsive-container {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  /* Advanced Hover Effects */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl;
+  }
+
+  .hover-scale {
+    @apply transition-all duration-300 hover:scale-105;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/25;
+  }
+}
+
+/* Advanced Keyframe Animations */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes progress-shimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Advanced Focus States for Accessibility */
+.focus-visible {
+  @apply outline-none ring-2 ring-primary/50 ring-offset-2;
+}
+
+/* Advanced Selection Styles */
+::selection {
+  @apply bg-primary/20 text-primary;
+}
+
+/* Advanced Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Line Clamp Utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Scrollbar Hide Utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
