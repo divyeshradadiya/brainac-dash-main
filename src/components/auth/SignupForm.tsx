@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, Mail, Lock, User, BookOpen } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Eye, EyeOff, Mail, Lock, User, BookOpen, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SignupFormProps {
-  onSignup: (firstName: string, lastName: string, email: string, password: string) => void;
+  onSignup: (firstName: string, lastName: string, email: string, password: string, grade: number) => void;
   onSwitchToLogin: () => void;
   isLoading?: boolean;
 }
@@ -18,6 +19,7 @@ export function SignupForm({ onSignup, onSwitchToLogin, isLoading = false }: Sig
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [grade, setGrade] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<{ 
@@ -26,6 +28,7 @@ export function SignupForm({ onSignup, onSwitchToLogin, isLoading = false }: Sig
     email?: string; 
     password?: string; 
     confirmPassword?: string; 
+    grade?: string;
   }>({});
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -38,6 +41,7 @@ export function SignupForm({ onSignup, onSwitchToLogin, isLoading = false }: Sig
       email?: string; 
       password?: string; 
       confirmPassword?: string; 
+      grade?: string;
     } = {};
     
     if (!firstName.trim()) {
@@ -66,10 +70,14 @@ export function SignupForm({ onSignup, onSwitchToLogin, isLoading = false }: Sig
       newErrors.confirmPassword = "Passwords do not match";
     }
     
+    if (!grade) {
+      newErrors.grade = "Please select your class";
+    }
+    
     setErrors(newErrors);
     
     if (Object.keys(newErrors).length === 0) {
-      onSignup(firstName, lastName, email, password);
+      onSignup(firstName, lastName, email, password, parseInt(grade));
     }
   };
 
@@ -181,6 +189,36 @@ export function SignupForm({ onSignup, onSwitchToLogin, isLoading = false }: Sig
                 </div>
                 {errors.email && (
                   <p className="text-sm text-red-600 dark:text-red-400">{errors.email}</p>
+                )}
+              </div>
+
+              {/* Grade Selection Field */}
+              <div className="space-y-2">
+                <Label htmlFor="grade" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Class / Grade
+                </Label>
+                <div className="relative group">
+                  <GraduationCap className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors z-10" />
+                  <Select value={grade} onValueChange={(value) => {
+                    setGrade(value);
+                    clearError('grade');
+                  }}>
+                    <SelectTrigger className="h-12 pl-12 pr-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 text-gray-900 dark:text-white">
+                      <SelectValue placeholder="Select your class" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5">Class 5</SelectItem>
+                      <SelectItem value="6">Class 6</SelectItem>
+                      <SelectItem value="7">Class 7</SelectItem>
+                      <SelectItem value="8">Class 8</SelectItem>
+                      <SelectItem value="9">Class 9</SelectItem>
+                      <SelectItem value="10">Class 10</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </div>
+                {errors.grade && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.grade}</p>
                 )}
               </div>
 

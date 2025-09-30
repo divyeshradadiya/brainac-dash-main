@@ -184,3 +184,110 @@ export function useAuth() {
   }
   return context;
 }
+  useEffect(() => {
+    const savedUser = localStorage.getItem('studyspace_user');
+    if (savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+      } catch (error) {
+        console.error('Error parsing saved user data:', error);
+        localStorage.removeItem('studyspace_user');
+      }
+    }
+    setIsLoading(false);
+  }, []);
+
+  const login = async (email: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Demo authentication logic - always succeed for demo purposes
+    // In a real app, you would validate against actual user data
+    const foundUser = demoUsers.find(u => u.email === email && u.password === password);
+    
+    // For demo: if exact match found, use that user, otherwise create a demo user
+    let userData: User;
+    if (foundUser) {
+      userData = {
+        id: foundUser.id,
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName,
+        email: foundUser.email,
+        avatar: foundUser.avatar
+      };
+    } else {
+      // Create a demo user with the provided email
+      userData = {
+        id: Date.now().toString(),
+        firstName: email.split('@')[0] || 'Demo',
+        lastName: 'User',
+        email: email,
+        avatar: 'https://github.com/shadcn.png'
+      };
+    }
+    
+    setUser(userData);
+    localStorage.setItem('studyspace_user', JSON.stringify(userData));
+    setIsLoading(false);
+    return true;
+  };
+
+  const signup = async (firstName: string, lastName: string, email: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Check if user already exists
+    const existingUser = demoUsers.find(u => u.email === email);
+    if (existingUser) {
+      setIsLoading(false);
+      return false; // User already exists
+    }
+    
+    // Create new user (in a real app, this would be saved to a database)
+    const newUser: User = {
+      id: Date.now().toString(),
+      firstName,
+      lastName,
+      email,
+      avatar: 'https://github.com/shadcn.png'
+    };
+    
+    setUser(newUser);
+    localStorage.setItem('studyspace_user', JSON.stringify(newUser));
+    setIsLoading(false);
+    return true;
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('studyspace_user');
+  };
+
+  const value: AuthContextType = {
+    user,
+    isAuthenticated: !!user,
+    isLoading,
+    login,
+    signup,
+    logout
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+}

@@ -17,9 +17,9 @@ export function AuthPage() {
     }
   };
 
-  const handleSignup = async (firstName: string, lastName: string, email: string, password: string) => {
+  const handleSignup = async (firstName: string, lastName: string, email: string, password: string, grade: number) => {
     try {
-      const success = await signup(firstName, lastName, email, password);
+      const success = await signup(firstName, lastName, email, password, grade);
       if (success) {
         toast.success("Account created successfully! Welcome to Brainac.");
       } else {
