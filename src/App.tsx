@@ -47,6 +47,11 @@ const App = () => (
                   <SubjectDetail />
                 </ProtectedRoute>
               } />
+              <Route path="/book/:subject" element={
+                <ProtectedRoute>
+                  <BookDetail />
+                </ProtectedRoute>
+              } />
             <Route path="/subjects-list" element={
                 <ProtectedRoute>
                   <BookDetail />

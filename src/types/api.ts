@@ -17,6 +17,11 @@ export interface Subject {
   name: string;
   icon: string;
   color: string;
+  bgColor?: string;
+  animatedNumbers?: string[];
+  totalUnits?: number;
+  totalChapters?: number;
+  totalExplainers?: number;
 }
 
 export interface Video {

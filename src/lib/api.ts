@@ -16,19 +16,20 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 class ApiService {
   private getAuthHeaders(): HeadersInit {
-    const token = localStorage.getItem('firebase_token');
+    const token = localStorage.getItem('brainac_auth_token');
     return {
       'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
+      // For development, always include a dummy token if none exists
+      Authorization: token ? `Bearer ${token}` : 'Bearer dev-token',
     };
   }
 
   setAuthToken(token: string): void {
-    localStorage.setItem('firebase_token', token);
+    localStorage.setItem('brainac_auth_token', token);
   }
 
   removeAuthToken(): void {
-    localStorage.removeItem('firebase_token');
+    localStorage.removeItem('brainac_auth_token');
   }
 
   private async makeRequest<T>(
@@ -92,8 +93,11 @@ class ApiService {
   }
 
   async getSubjects(): Promise<SubjectsResponse> {
-    const response = await this.makeRequest<ApiResponse<SubjectsResponse>>('/subjects');
-    return response.data;
+    return this.makeRequest<SubjectsResponse>('/subjects');
+  }
+
+  async getSubjectDetails(subjectId: string): Promise<any> {
+    return  this.makeRequest<ApiResponse<any>>(`/subjects/${subjectId}`);
   }
 
   async getVideos(subjectId?: string): Promise<VideosResponse> {
