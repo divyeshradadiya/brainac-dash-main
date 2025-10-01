@@ -1,18 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  User as FirebaseUser
-} from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { apiService } from '@/lib/api';
 import type { User } from '@/types/api';
 
 interface AuthContextType {
   user: User | null;
-  firebaseUser: FirebaseUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
@@ -29,71 +20,68 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
-  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Monitor Firebase auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setFirebaseUser(firebaseUser);
-      
-      if (firebaseUser) {
-        try {
-          // Get Firebase ID token
-          const token = await firebaseUser.getIdToken();
-          apiService.setAuthToken(token);
-          
-          // Fetch user profile from backend
-          const response = await apiService.getProfile();
-          if (response.success && response.data) {
-            // Convert backend response to User type
-            const userData: User = {
-              uid: response.data.uid,
-              email: response.data.email,
-              firstName: response.data.displayName?.split(' ')[0] || '',
-              lastName: response.data.displayName?.split(' ')[1] || '',
-              grade: response.data.class,
-              subscriptionStatus: response.data.subscriptionStatus as 'trial' | 'active' | 'expired' | 'cancelled',
-              trialEndDate: response.data.trialEndDate,
-              createdAt: response.data.createdAt,
-              updatedAt: response.data.updatedAt,
-            };
-            setUser(userData);
-          } else {
-            console.error('Failed to fetch user profile:', response.error);
-            // If backend profile doesn't exist, user might need to complete registration
-            setUser(null);
-          }
-        } catch (error) {
-          console.error('Error setting up user session:', error);
-          setUser(null);
+    // Check for stored authentication on app start
+    const checkStoredAuth = () => {
+      try {
+        const storedUser = localStorage.getItem('brainac_user');
+        const storedToken = localStorage.getItem('brainac_auth_token');
+        
+        if (storedUser && storedToken) {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+          apiService.setAuthToken(storedToken);
         }
-      } else {
-        // User is signed out
-        setUser(null);
-        apiService.removeAuthToken();
+      } catch (error) {
+        console.error('Error restoring auth state:', error);
+        // Clear invalid stored data
+        localStorage.removeItem('brainac_user');
+        localStorage.removeItem('brainac_auth_token');
+      } finally {
+        setIsLoading(false);
       }
-      
-      setIsLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    checkStoredAuth();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
     try {
-      // Sign in with Firebase
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const firebaseUser = userCredential.user;
+      // Login via backend
+      const response = await apiService.login(email, password);
       
-      // Get ID token
-      const token = await firebaseUser.getIdToken();
-      apiService.setAuthToken(token);
-      
-      // The onAuthStateChanged listener will handle fetching the user profile
-      return true;
+      if (response.customToken) {
+        // Store auth data in localStorage instead of using Firebase custom token
+        const userData: User = {
+          uid: response.uid,
+          email: response.email,
+          firstName: response.displayName?.split(' ')[0] || '',
+          lastName: response.displayName?.split(' ')[1] || '',
+          grade: response.class,
+          subscriptionStatus: response.subscriptionStatus as 'trial' | 'active' | 'expired' | 'cancelled',
+          trialEndDate: response.trialEndDate,
+          createdAt: response.createdAt,
+          updatedAt: response.updatedAt,
+        };
+        
+        // Store user data and auth token
+        localStorage.setItem('brainac_user', JSON.stringify(userData));
+        localStorage.setItem('brainac_auth_token', response.customToken);
+        
+        setUser(userData);
+        setIsLoading(false);
+        
+        return true;
+      } else {
+        console.error('Login failed: No custom token received');
+        setIsLoading(false);
+        return false;
+      }
     } catch (error: unknown) {
       console.error('Login error:', error instanceof Error ? error.message : 'Login failed');
       setIsLoading(false);
@@ -111,15 +99,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
     
     try {
-      // Create user with Firebase
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const firebaseUser = userCredential.user;
-      
-      // Get ID token
-      const token = await firebaseUser.getIdToken();
-      apiService.setAuthToken(token);
-      
-      // Register user in backend
+      // Register via backend
       const response = await apiService.register({
         email,
         password,
@@ -128,13 +108,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
         class: grade,
       });
       
-      if (response.success) {
-        // The onAuthStateChanged listener will handle fetching the user profile
+      if (response.customToken) {
+        // Store auth data in localStorage instead of using Firebase custom token
+        const userData: User = {
+          uid: response.uid,
+          email: response.email,
+          firstName: firstName,
+          lastName: lastName,
+          grade: response.class,
+          subscriptionStatus: response.subscriptionStatus as 'trial' | 'active' | 'expired' | 'cancelled',
+          trialEndDate: response.trialEndDate,
+          createdAt: response.createdAt,
+          updatedAt: response.updatedAt,
+        };
+        
+        // Store user data and auth token
+        localStorage.setItem('brainac_user', JSON.stringify(userData));
+        localStorage.setItem('brainac_auth_token', response.customToken);
+        
+        setUser(userData);
+        setIsLoading(false);
+        
         return true;
       } else {
-        console.error('Backend registration failed:', response.error);
-        // Delete the Firebase user if backend registration fails
-        await firebaseUser.delete();
+        console.error('Registration failed: No custom token received');
         setIsLoading(false);
         return false;
       }
@@ -147,9 +144,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = async (): Promise<void> => {
     try {
-      await signOut(auth);
+      // Clear localStorage
+      localStorage.removeItem('brainac_user');
+      localStorage.removeItem('brainac_auth_token');
+      
       setUser(null);
-      setFirebaseUser(null);
       apiService.removeAuthToken();
     } catch (error) {
       console.error('Logout error:', error);
@@ -157,37 +156,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const refreshUserProfile = async (): Promise<void> => {
-    if (firebaseUser) {
-      try {
-        const token = await firebaseUser.getIdToken(true); // Force refresh
-        apiService.setAuthToken(token);
-        
-        const response = await apiService.getProfile();
-        if (response.success && response.data) {
-          // Convert backend response to User type
-          const userData: User = {
-            uid: response.data.uid,
-            email: response.data.email,
-            firstName: response.data.displayName?.split(' ')[0] || '',
-            lastName: response.data.displayName?.split(' ')[1] || '',
-            grade: response.data.class,
-            subscriptionStatus: response.data.subscriptionStatus as 'trial' | 'active' | 'expired' | 'cancelled',
-            trialEndDate: response.data.trialEndDate,
-            createdAt: response.data.createdAt,
-            updatedAt: response.data.updatedAt,
-          };
-          setUser(userData);
-        }
-      } catch (error) {
-        console.error('Error refreshing user profile:', error);
+    try {
+      const storedToken = localStorage.getItem('brainac_auth_token');
+      if (!storedToken) {
+        console.error('No auth token found');
+        return;
       }
+
+      apiService.setAuthToken(storedToken);
+      
+      const response = await apiService.getProfile();
+      if (response.success && response.data) {
+        // Convert backend response to User type
+        const userData: User = {
+          uid: response.data.uid,
+          email: response.data.email,
+          firstName: response.data.displayName?.split(' ')[0] || '',
+          lastName: response.data.displayName?.split(' ')[1] || '',
+          grade: response.data.class,
+          subscriptionStatus: response.data.subscriptionStatus as 'trial' | 'active' | 'expired' | 'cancelled',
+          trialEndDate: response.data.trialEndDate,
+          createdAt: response.data.createdAt,
+          updatedAt: response.data.updatedAt,
+        };
+        setUser(userData);
+        
+        // Update localStorage with fresh user data
+        localStorage.setItem('brainac_user', JSON.stringify(userData));
+      }
+    } catch (error) {
+      console.error('Error refreshing user profile:', error);
     }
   };
 
   const value: AuthContextType = {
     user,
-    firebaseUser,
-    isAuthenticated: !!user && !!firebaseUser,
+    isAuthenticated: !!user,
     isLoading,
     login,
     signup,

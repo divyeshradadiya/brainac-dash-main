@@ -66,10 +66,17 @@ class ApiService {
     }
   }
 
-  async register(userData: RegisterRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.makeRequest<ApiResponse<AuthResponse>>('/auth/register', {
+  async register(userData: RegisterRequest): Promise<AuthResponse & {customToken: string}> {
+    return this.makeRequest<AuthResponse & {customToken: string}>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
+    });
+  }
+
+  async login(email: string, password: string): Promise<AuthResponse & {customToken: string}> {
+    return this.makeRequest<AuthResponse & {customToken: string}>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
     });
   }
 

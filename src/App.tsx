@@ -88,6 +88,8 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/signin" element={<AuthPage />} />
+              <Route path="/signup" element={<AuthPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <FloatingDoubtButton />
