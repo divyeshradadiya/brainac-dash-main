@@ -80,6 +80,8 @@ export interface AuthResponse {
   class: number;
   subscriptionStatus: string;
   trialEndDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AuthRegisterResponse {

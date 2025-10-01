@@ -8,6 +8,20 @@ import { Check, Crown, Zap, Shield, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/lib/api';
 
+interface RazorpayResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+declare global {
+  interface Window {
+    Razorpay: new (options: Record<string, unknown>) => {
+      open: () => void;
+    };
+  }
+}
+
 interface SubscriptionPlan {
   id: string;
   name: string;
@@ -72,8 +86,8 @@ export default function Subscription() {
 
       setPlans(plansResponse || []);
       setSubscriptionStatus(statusResponse);
-    } catch (error: any) {
-      console.error('Failed to load subscription data:', error);
+    } catch (error: unknown) {
+      console.error('Failed to load subscription data:', error instanceof Error ? error.message : 'Unknown error');
       setError('Failed to load subscription information.');
     } finally {
       setIsLoading(false);
@@ -103,7 +117,7 @@ export default function Subscription() {
         name: 'Brainac',
         description: `Subscribe to ${plan.name}`,
         order_id: orderResponse.orderId,
-        handler: async (response: any) => {
+        handler: async (response: RazorpayResponse) => {
           try {
             // Verify payment
             await apiService.verifyPayment({
@@ -117,8 +131,8 @@ export default function Subscription() {
             alert('Payment successful! Your subscription has been activated.');
             loadData();
             navigate('/subjects');
-          } catch (error: any) {
-            console.error('Payment verification failed:', error);
+          } catch (error: unknown) {
+            console.error('Payment verification failed:', error instanceof Error ? error.message : 'Unknown error');
             setError('Payment verification failed. Please contact support.');
           }
         },
@@ -136,11 +150,11 @@ export default function Subscription() {
         }
       };
 
-      const razorpay = new (window as any).Razorpay(options);
+      const razorpay = new window.Razorpay(options);
       razorpay.open();
-    } catch (error: any) {
-      console.error('Payment initiation failed:', error);
-      setError(error.message || 'Failed to initiate payment.');
+    } catch (error: unknown) {
+      console.error('Payment initiation failed:', error instanceof Error ? error.message : 'Unknown error');
+      setError(error instanceof Error ? error.message : 'Failed to initiate payment.');
     } finally {
       setIsProcessing(false);
     }

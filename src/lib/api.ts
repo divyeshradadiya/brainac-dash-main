@@ -8,7 +8,8 @@ import type {
   VideosResponse,
   VideoResponse,
   SubscriptionStatusResponse,
-  RegisterRequest
+  RegisterRequest,
+  UpdateProfileRequest
 } from '@/types/api';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -20,6 +21,14 @@ class ApiService {
       'Content-Type': 'application/json',
       ...(token && { Authorization: `Bearer ${token}` }),
     };
+  }
+
+  setAuthToken(token: string): void {
+    localStorage.setItem('firebase_token', token);
+  }
+
+  removeAuthToken(): void {
+    localStorage.removeItem('firebase_token');
   }
 
   private async makeRequest<T>(
@@ -57,44 +66,56 @@ class ApiService {
     }
   }
 
-  async register(userData: RegisterRequest): Promise<AuthResponse> {
-    return this.makeRequest<AuthResponse>('/auth/register', {
+  async register(userData: RegisterRequest): Promise<ApiResponse<AuthResponse>> {
+    return this.makeRequest<ApiResponse<AuthResponse>>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     });
   }
 
-  async getProfile(): Promise<AuthResponse> {
-    return this.makeRequest<AuthResponse>('/auth/profile');
+  async getProfile(): Promise<ApiResponse<AuthResponse>> {
+    return this.makeRequest<ApiResponse<AuthResponse>>('/auth/profile');
+  }
+
+  async updateProfile(userData: UpdateProfileRequest): Promise<ApiResponse<{message: string}>> {
+    return this.makeRequest<ApiResponse<{message: string}>>('/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify(userData),
+    });
   }
 
   async getSubjects(): Promise<SubjectsResponse> {
-    return this.makeRequest<SubjectsResponse>('/subjects');
+    const response = await this.makeRequest<ApiResponse<SubjectsResponse>>('/subjects');
+    return response.data;
   }
 
   async getVideos(subjectId?: string): Promise<VideosResponse> {
-    const endpoint = subjectId ? `/subjects/${subjectId}/videos` : '/videos';
-    return this.makeRequest<VideosResponse>(endpoint);
+    const endpoint = subjectId ? `/subjects/${subjectId}/videos` : '/subjects/all/videos';
+    const response = await this.makeRequest<ApiResponse<VideosResponse>>(endpoint);
+    return response.data;
   }
 
   async getVideo(videoId: string): Promise<VideoResponse> {
-    return this.makeRequest<VideoResponse>(`/videos/${videoId}`);
+    const response = await this.makeRequest<ApiResponse<VideoResponse>>(`/subjects/videos/${videoId}`);
+    return response.data;
   }
 
   async getSubscriptionStatus(): Promise<SubscriptionStatusResponse> {
-    return this.makeRequest<SubscriptionStatusResponse>('/subscription/status');
+    const response = await this.makeRequest<ApiResponse<SubscriptionStatusResponse>>('/subscription/status');
+    return response.data;
   }
 
   async getSubscriptionPlans(): Promise<SubscriptionPlan[]> {
-    const response = await this.makeRequest<ApiResponse<SubscriptionPlan[]>>('/subscription/plans');
-    return response.data || [];
+    const response = await this.makeRequest<ApiResponse<{plans: SubscriptionPlan[]}>>('/subscription/plans');
+    return response.data.plans || [];
   }
 
   async createPaymentOrder(planId: string, amount: number): Promise<{ orderId: string; amount: number; currency: string; key: string }> {
-    return this.makeRequest<{ orderId: string; amount: number; currency: string; key: string }>('/subscription/create-order', {
+    const response = await this.makeRequest<ApiResponse<{ orderId: string; amount: number; currency: string; key: string }>>('/subscription/create-order', {
       method: 'POST',
       body: JSON.stringify({ planId, amount }),
     });
+    return response.data;
   }
 
   async verifyPayment(data: {
@@ -103,10 +124,11 @@ class ApiService {
     razorpay_signature: string;
     planId: string;
   }): Promise<{ message: string; subscriptionStatus: string; subscriptionPlan: string; subscriptionEndDate: string; paymentId: string }> {
-    return this.makeRequest<{ message: string; subscriptionStatus: string; subscriptionPlan: string; subscriptionEndDate: string; paymentId: string }>('/subscription/verify-payment', {
+    const response = await this.makeRequest<ApiResponse<{ message: string; subscriptionStatus: string; subscriptionPlan: string; subscriptionEndDate: string; paymentId: string }>>('/subscription/verify-payment', {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    return response.data;
   }
 }
 

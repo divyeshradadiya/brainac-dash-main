@@ -6,8 +6,9 @@ import {
   onAuthStateChanged,
   User as FirebaseUser
 } from 'firebase/auth';
-import { auth } from '../lib/firebase';
-import { apiService, User } from '../lib/api';
+import { auth } from '@/lib/firebase';
+import { apiService } from '@/lib/api';
+import type { User } from '@/types/api';
 
 interface AuthContextType {
   user: User | null;
@@ -43,9 +44,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
           apiService.setAuthToken(token);
           
           // Fetch user profile from backend
-          const response = await apiService.getUserProfile();
+          const response = await apiService.getProfile();
           if (response.success && response.data) {
-            setUser(response.data.user);
+            // Convert backend response to User type
+            const userData: User = {
+              uid: response.data.uid,
+              email: response.data.email,
+              firstName: response.data.displayName?.split(' ')[0] || '',
+              lastName: response.data.displayName?.split(' ')[1] || '',
+              grade: response.data.class,
+              subscriptionStatus: response.data.subscriptionStatus as 'trial' | 'active' | 'expired' | 'cancelled',
+              trialEndDate: response.data.trialEndDate,
+              createdAt: response.data.createdAt,
+              updatedAt: response.data.updatedAt,
+            };
+            setUser(userData);
           } else {
             console.error('Failed to fetch user profile:', response.error);
             // If backend profile doesn't exist, user might need to complete registration
@@ -81,8 +94,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       // The onAuthStateChanged listener will handle fetching the user profile
       return true;
-    } catch (error: any) {
-      console.error('Login error:', error);
+    } catch (error: unknown) {
+      console.error('Login error:', error instanceof Error ? error.message : 'Login failed');
       setIsLoading(false);
       return false;
     }
@@ -107,7 +120,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       apiService.setAuthToken(token);
       
       // Register user in backend
-      const response = await apiService.registerUser({
+      const response = await apiService.register({
         email,
         password,
         firstName,
@@ -125,8 +138,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setIsLoading(false);
         return false;
       }
-    } catch (error: any) {
-      console.error('Signup error:', error);
+    } catch (error: unknown) {
+      console.error('Signup error:', error instanceof Error ? error.message : 'Signup failed');
       setIsLoading(false);
       return false;
     }
@@ -149,9 +162,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const token = await firebaseUser.getIdToken(true); // Force refresh
         apiService.setAuthToken(token);
         
-        const response = await apiService.getUserProfile();
+        const response = await apiService.getProfile();
         if (response.success && response.data) {
-          setUser(response.data.user);
+          // Convert backend response to User type
+          const userData: User = {
+            uid: response.data.uid,
+            email: response.data.email,
+            firstName: response.data.displayName?.split(' ')[0] || '',
+            lastName: response.data.displayName?.split(' ')[1] || '',
+            grade: response.data.class,
+            subscriptionStatus: response.data.subscriptionStatus as 'trial' | 'active' | 'expired' | 'cancelled',
+            trialEndDate: response.data.trialEndDate,
+            createdAt: response.data.createdAt,
+            updatedAt: response.data.updatedAt,
+          };
+          setUser(userData);
         }
       } catch (error) {
         console.error('Error refreshing user profile:', error);
@@ -177,6 +202,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {

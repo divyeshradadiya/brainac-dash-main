@@ -443,7 +443,17 @@ const explainersData = {
   ]
 };
 
-const BookDetail = () => {
+interface BookData {
+  id: string;
+  subject: string;
+  title: string;
+  description: string;
+  duration: string;
+  studyTime: string;
+  earnPercentage: string;
+}
+
+export function BookDetail() {
   const { bookId, subject } = useParams<{ bookId: string; subject: string }>();
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = useState<string>(subject || 'mathematics');
@@ -458,7 +468,7 @@ const BookDetail = () => {
     ? subjectConfig[selectedSubject as keyof typeof subjectConfig]
     : subjectConfig.mathematics;
 
-  const [bookData, setBookData] = useState<any>(null);
+  const [bookData, setBookData] = useState<BookData | null>(null);
 
   // Available subjects for selection
   const availableSubjects = [

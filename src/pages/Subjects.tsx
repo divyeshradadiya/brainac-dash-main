@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,13 +24,22 @@ function Subjects() {
     }
     loadSubjects();
   }, [isAuthenticated, user, navigate]);
+  const loadVideos = useCallback(async () => {
+    try {
+      setError(null);
+      const response: VideosResponse = await apiService.getVideos(subjectId);
+      setVideos(response.videos || []);
+    } catch (error: unknown) {
+      console.error('Failed to load videos:', error);
+      setError('Failed to load videos for this subject.');
+    }
+  }, [subjectId]);
 
   useEffect(() => {
     if (subjects.length > 0) {
       loadVideos();
     }
-  }, [subjectId, subjects]);
-
+  }, [subjectId, subjects, loadVideos]);
   const loadSubjects = async () => {
     try {
       setIsLoading(true);
@@ -45,16 +54,7 @@ function Subjects() {
     }
   };
 
-  const loadVideos = async () => {
-    try {
-      setError(null);
-      const response: VideosResponse = await apiService.getVideos(subjectId);
-      setVideos(response.videos || []);
-    } catch (error: unknown) {
-      console.error('Failed to load videos:', error);
-      setError('Failed to load videos for this subject.');
-    }
-  };
+
 
   const handleVideoClick = (videoId: string) => {
     navigate(`/video/${videoId}`);
