@@ -11,7 +11,15 @@ import {
   Area
 } from 'recharts';
 
-const data = [
+interface RevenueChartProps {
+  data?: Array<{
+    month: string;
+    revenue: number;
+    subscriptions: number;
+  }>;
+}
+
+const defaultData = [
   { month: 'Jan', revenue: 45000, subscriptions: 120 },
   { month: 'Feb', revenue: 52000, subscriptions: 145 },
   { month: 'Mar', revenue: 48000, subscriptions: 135 },
@@ -26,7 +34,7 @@ const data = [
   { month: 'Dec', revenue: 125000, subscriptions: 380 }
 ];
 
-export function RevenueChart() {
+export function RevenueChart({ data = defaultData }: RevenueChartProps) {
   return (
     <Card>
       <CardHeader>

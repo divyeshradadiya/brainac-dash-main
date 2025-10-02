@@ -14,7 +14,11 @@ interface Transaction {
   paymentId: string;
 }
 
-const transactions: Transaction[] = [
+interface RecentTransactionsProps {
+  transactions?: Transaction[];
+}
+
+const defaultTransactions: Transaction[] = [
   {
     id: '1',
     user: 'Rahul Sharma',
@@ -67,7 +71,7 @@ const transactions: Transaction[] = [
   }
 ];
 
-export function RecentTransactions() {
+export function RecentTransactions({ transactions = defaultTransactions }: RecentTransactionsProps) {
   const getStatusBadge = (status: Transaction['status']) => {
     switch (status) {
       case 'completed':

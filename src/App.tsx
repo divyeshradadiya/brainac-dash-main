@@ -23,6 +23,10 @@ import { ThemeShowcase } from "@/components/ThemeShowcase";
 import NotFound from "./pages/NotFound";
 import Subscription from "./pages/Subscription";
 import AdminDashboard from "./pages/admin/Dashboard";
+import AdminSubjects from "./pages/admin/Subjects";
+import AdminVideos from "./pages/admin/Videos";
+import AdminUsers from "./pages/admin/Users";
+import AdminPayments from "./pages/admin/Payments";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +110,26 @@ const App = () => (
               <Route path="/admin" element={
                 <ProtectedRoute>
                   <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/subjects" element={
+                <ProtectedRoute>
+                  <AdminSubjects />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/videos" element={
+                <ProtectedRoute>
+                  <AdminVideos />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/users" element={
+                <ProtectedRoute>
+                  <AdminUsers />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/payments" element={
+                <ProtectedRoute>
+                  <AdminPayments />
                 </ProtectedRoute>
               } />
             <Route path="/groups" element={

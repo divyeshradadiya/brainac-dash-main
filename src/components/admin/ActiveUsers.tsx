@@ -14,7 +14,11 @@ interface ActiveUser {
   joinDate: string;
 }
 
-const activeUsers: ActiveUser[] = [
+interface ActiveUsersProps {
+  users?: ActiveUser[];
+}
+
+const defaultActiveUsers: ActiveUser[] = [
   {
     id: '1',
     name: 'Arjun Mehta',
@@ -67,7 +71,7 @@ const activeUsers: ActiveUser[] = [
   }
 ];
 
-export function ActiveUsers() {
+export function ActiveUsers({ users = defaultActiveUsers }: ActiveUsersProps) {
   const getStatusBadge = (status: ActiveUser['status']) => {
     switch (status) {
       case 'active':
@@ -91,7 +95,7 @@ export function ActiveUsers() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {activeUsers.map((user) => (
+          {users.map((user) => (
             <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">

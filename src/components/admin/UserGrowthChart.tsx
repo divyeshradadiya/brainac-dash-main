@@ -9,7 +9,16 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 
-const data = [
+interface UserGrowthChartProps {
+  data?: Array<{
+    month: string;
+    newUsers: number;
+    activeUsers: number;
+    trialUsers: number;
+  }>;
+}
+
+const defaultData = [
   { month: 'Jan', newUsers: 85, activeUsers: 420, trialUsers: 45 },
   { month: 'Feb', newUsers: 120, activeUsers: 485, trialUsers: 52 },
   { month: 'Mar', newUsers: 95, activeUsers: 510, trialUsers: 38 },
@@ -24,7 +33,7 @@ const data = [
   { month: 'Dec', newUsers: 350, activeUsers: 1420, trialUsers: 145 }
 ];
 
-export function UserGrowthChart() {
+export function UserGrowthChart({ data = defaultData }: UserGrowthChartProps) {
   return (
     <Card>
       <CardHeader>

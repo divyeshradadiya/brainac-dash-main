@@ -21,6 +21,8 @@ import { RecentTransactions } from '@/components/admin/RecentTransactions';
 import { ActiveUsers } from '@/components/admin/ActiveUsers';
 import { ContentOverview } from '@/components/admin/ContentOverview';
 import { RevenueChart } from '@/components/admin/RevenueChart';
+import { AdminLayout } from '@/components/admin/AdminLayout';
+import { adminApiService } from '@/lib/adminApi';
 
 interface DashboardStats {
   totalStudents: number;
@@ -33,49 +35,80 @@ interface DashboardStats {
   totalSubjects: number;
   newStudentsToday: number;
   paymentsPending: number;
+  recentTransactions: any[];
+  activeUsers: any[];
+  usersByStatus: any;
+  revenueByMonth: any[];
+  userGrowthByMonth: any[];
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<DashboardStats>({
-    totalStudents: 1247,
-    activeSubscriptions: 892,
-    trialUsers: 234,
-    expiredUsers: 121,
-    monthlyRevenue: 267800,
-    totalRevenue: 1234567,
-    totalVideos: 1580,
-    totalSubjects: 15,
-    newStudentsToday: 23,
-    paymentsPending: 12
-  });
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  // In real implementation, fetch data from API
+  // Fetch real data from API
   useEffect(() => {
-    // fetchDashboardStats();
+    fetchDashboardStats();
   }, []);
 
+  const fetchDashboardStats = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await adminApiService.getDashboardStats();
+      setStats(data);
+    } catch (error) {
+      console.error('Failed to fetch dashboard stats:', error);
+      setError('Failed to load dashboard data');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !stats) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 mb-4">Error loading dashboard</div>
+          <Button onClick={fetchDashboardStats}>Retry</Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/20">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
-              <p className="text-gray-600 dark:text-gray-300">Welcome back! Here's what's happening with Brainac today.</p>
-            </div>
-            <div className="flex space-x-3">
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Content
-              </Button>
-              <Button variant="outline">Export Data</Button>
+    <AdminLayout>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/20">
+        {/* Header */}
+        <div className="bg-white dark:bg-gray-800 shadow-sm border-b">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+                <p className="text-gray-600 dark:text-gray-300">Welcome back! Here's what's happening with Brainac today.</p>
+              </div>
+              <div className="flex space-x-3">
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Content
+                </Button>
+                <Button variant="outline">Export Data</Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
       <div className="p-6 space-y-6">
         {/* Quick Stats Cards */}
@@ -143,8 +176,8 @@ export default function AdminDashboard() {
 
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <RevenueChart />
-          <UserGrowthChart />
+          <RevenueChart data={stats?.revenueByMonth} />
+          <UserGrowthChart data={stats?.userGrowthByMonth} />
         </div>
 
         {/* Detailed Stats and Tables */}
@@ -247,10 +280,11 @@ export default function AdminDashboard() {
 
         {/* Tables Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <RecentTransactions />
-          <ActiveUsers />
+          <RecentTransactions transactions={stats?.recentTransactions} />
+          <ActiveUsers users={stats?.activeUsers} />
         </div>
       </div>
-    </div>
+      </div>
+    </AdminLayout>
   );
 }
