@@ -131,10 +131,10 @@ class AdminApiService {
 
   async createSubject(subjectData: {
     name: string;
-    class: number;
-    icon: string;
-    color: string;
-    bgColor: string;
+    description: string;
+    grade: number;
+    icon?: string;
+    color?: string;
   }): Promise<any> {
     return this.makeRequest('/admin/subjects', {
       method: 'POST',
@@ -143,11 +143,11 @@ class AdminApiService {
   }
 
   async updateSubject(subjectId: string, subjectData: {
-    name: string;
-    class: number;
-    icon: string;
-    color: string;
-    bgColor: string;
+    name?: string;
+    description?: string;
+    grade?: number;
+    icon?: string;
+    color?: string;
   }): Promise<any> {
     return this.makeRequest(`/admin/subjects/${subjectId}`, {
       method: 'PUT',
@@ -162,6 +162,29 @@ class AdminApiService {
   }
 
   // Video Management
+  async getVideos(filters: {
+    grade?: number;
+    subject?: string;
+    page?: number;
+    limit?: number;
+  } = {}): Promise<{
+    success: boolean;
+    data: {
+      videos: any[];
+      totalVideos: number;
+      page: number;
+      totalPages: number;
+    };
+  }> {
+    const params = new URLSearchParams();
+    if (filters.grade) params.append('grade', filters.grade.toString());
+    if (filters.subject) params.append('subject', filters.subject);
+    if (filters.page) params.append('page', filters.page.toString());
+    if (filters.limit) params.append('limit', filters.limit.toString());
+
+    return this.makeRequest(`/admin/videos?${params.toString()}`);
+  }
+
   async getAdminVideos(filters: {
     grade?: number;
     subject?: string;

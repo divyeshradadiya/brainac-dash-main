@@ -39,14 +39,17 @@ import {
   FileText,
   Search,
   Filter,
-  Download
+  Download,
+  FolderOpen
 } from 'lucide-react';
 import { adminApiService } from '@/lib/adminApi';
 import { AdminLayout } from '@/components/admin/AdminLayout';
+import { SubjectDetailModal } from '@/components/admin/SubjectDetailModal';
 
 interface Subject {
   id: string;
   name: string;
+  description?: string;
   class: number;
   icon: string;
   color: string;
@@ -62,6 +65,7 @@ interface Subject {
 
 interface SubjectFormData {
   name: string;
+  description: string;
   class: number;
   icon: string;
   color: string;
@@ -77,9 +81,11 @@ export default function AdminSubjects() {
   const [selectedClass, setSelectedClass] = useState<string>('all');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [formData, setFormData] = useState<SubjectFormData>({
     name: '',
+    description: '',
     class: 6,
     icon: '📚',
     color: 'from-primary to-secondary',
@@ -99,7 +105,19 @@ export default function AdminSubjects() {
       setIsLoading(true);
       setError(null);
       const data = await adminApiService.getSubjects();
-      setSubjects(data);
+      
+      // Map backend fields to frontend interface
+      const mappedSubjects = data.map((subject: any) => ({
+        ...subject,
+        class: subject.grade || subject.class, // Map grade to class
+        totalVideos: subject.videoCount || 0,
+        totalUnits: subject.unitCount || 0,
+        totalChapters: subject.chapterCount || 0,
+        totalExplainers: subject.videoCount || 0,
+        enrolledStudents: subject.enrolledStudents || 0
+      }));
+      
+      setSubjects(mappedSubjects);
     } catch (error) {
       console.error('Failed to fetch subjects:', error);
       setError('Failed to load subjects');
@@ -127,7 +145,15 @@ export default function AdminSubjects() {
 
   const handleCreateSubject = async () => {
     try {
-      const newSubject = await adminApiService.createSubject(formData);
+      // Map frontend fields to backend expected fields
+      const subjectData = {
+        name: formData.name,
+        description: formData.description,
+        grade: formData.class, // Map class to grade
+        icon: formData.icon,
+        color: formData.color
+      };
+      const newSubject = await adminApiService.createSubject(subjectData);
       setSubjects([...subjects, newSubject]);
       setIsCreateDialogOpen(false);
       resetForm();
@@ -141,7 +167,15 @@ export default function AdminSubjects() {
     if (!selectedSubject) return;
 
     try {
-      const updatedSubject = await adminApiService.updateSubject(selectedSubject.id, formData);
+      // Map frontend fields to backend expected fields
+      const updateData = {
+        name: formData.name,
+        description: formData.description,
+        grade: formData.class, // Map class to grade
+        icon: formData.icon,
+        color: formData.color
+      };
+      const updatedSubject = await adminApiService.updateSubject(selectedSubject.id, updateData);
       setSubjects(subjects.map(s => s.id === selectedSubject.id ? updatedSubject : s));
       setIsEditDialogOpen(false);
       setSelectedSubject(null);
@@ -167,9 +201,11 @@ export default function AdminSubjects() {
   };
 
   const openEditDialog = (subject: Subject) => {
+    console.log('Opening edit dialog for subject:', subject); // Debug log
     setSelectedSubject(subject);
     setFormData({
       name: subject.name,
+      description: subject.description || '',
       class: subject.class,
       icon: subject.icon,
       color: subject.color,
@@ -178,9 +214,15 @@ export default function AdminSubjects() {
     setIsEditDialogOpen(true);
   };
 
+  const openDetailModal = (subject: Subject) => {
+    setSelectedSubject(subject);
+    setIsDetailModalOpen(true);
+  };
+
   const resetForm = () => {
     setFormData({
       name: '',
+      description: '',
       class: 6,
       icon: '📚',
       color: 'from-primary to-secondary',
@@ -236,6 +278,15 @@ export default function AdminSubjects() {
                       />
                     </div>
                     <div>
+                      <Label htmlFor="description">Description</Label>
+                      <Input
+                        id="description"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder="Enter subject description"
+                      />
+                    </div>
+                    <div>
                       <Label htmlFor="class">Class</Label>
                       <Select value={formData.class.toString()} onValueChange={(value) => setFormData({ ...formData, class: parseInt(value) })}>
                         <SelectTrigger>
@@ -280,6 +331,49 @@ export default function AdminSubjects() {
             <p className="text-red-800">{error}</p>
           </div>
         )}
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {filteredSubjects.slice(0, 6).map((subject) => (
+            <Card key={subject.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="text-3xl">{subject.icon}</div>
+                    <div>
+                      <CardTitle className="text-lg">{subject.name}</CardTitle>
+                      <Badge variant="outline">Class {subject.class}</Badge>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-3 gap-4 text-center mb-4">
+                  <div>
+                    <div className="text-2xl font-bold text-blue-600">{subject.totalUnits || 0}</div>
+                    <div className="text-xs text-gray-500">Units</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-green-600">{subject.totalChapters || 0}</div>
+                    <div className="text-xs text-gray-500">Chapters</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-purple-600">{subject.totalVideos || 0}</div>
+                    <div className="text-xs text-gray-500">Videos</div>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => openDetailModal(subject)}
+                  size="sm"
+                >
+                  <FolderOpen className="w-4 h-4 mr-2" />
+                  Manage Content
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -433,7 +527,12 @@ export default function AdminSubjects() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => openDetailModal(subject)}
+                          title="View Details & Manage Content"
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button 
@@ -481,6 +580,15 @@ export default function AdminSubjects() {
               />
             </div>
             <div>
+              <Label htmlFor="edit-description">Description</Label>
+              <Input
+                id="edit-description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Enter subject description"
+              />
+            </div>
+            <div>
               <Label htmlFor="edit-class">Class</Label>
               <Select value={formData.class.toString()} onValueChange={(value) => setFormData({ ...formData, class: parseInt(value) })}>
                 <SelectTrigger>
@@ -509,6 +617,17 @@ export default function AdminSubjects() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Subject Detail Modal */}
+      <SubjectDetailModal
+        subject={selectedSubject}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedSubject(null);
+        }}
+        onUpdate={fetchSubjects}
+      />
       </div>
     </AdminLayout>
   );

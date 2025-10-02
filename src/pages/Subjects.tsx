@@ -41,7 +41,7 @@ function Subjects() {
   }, [subjectId]);
 
   useEffect(() => {
-    if (subjects.length > 0) {
+    if (subjects.length > 0) {  
       loadVideos();
     }
   }, [subjectId, subjects, loadVideos]);
@@ -97,7 +97,7 @@ function Subjects() {
         </Card>
       </div>
     );
-  }
+  } 
 
   if (!subjectId) {
     return (
