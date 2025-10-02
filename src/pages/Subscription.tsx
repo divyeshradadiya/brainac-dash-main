@@ -107,7 +107,14 @@ export default function Subscription() {
 
       // Create payment order
       const amount = plan.price * 100; // Convert to paise
+      console.log('Creating payment order for plan:', plan.id, 'amount:', amount);
+      
       const orderResponse = await apiService.createPaymentOrder(plan.id, amount);
+      console.log('Order response received:', orderResponse);
+      
+      if (!orderResponse || !orderResponse.key || !orderResponse.orderId) {
+        throw new Error('Invalid payment order response from server');
+      }
 
       // Initialize Razorpay payment
       const options = {
@@ -119,21 +126,30 @@ export default function Subscription() {
         order_id: orderResponse.orderId,
         handler: async (response: RazorpayResponse) => {
           try {
+            console.log('Payment completed, verifying...', response);
+            
             // Verify payment
-            await apiService.verifyPayment({
+            const verificationResult = await apiService.verifyPayment({
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
               planId: plan.id
             });
 
-            // Show success message and refresh data
-            alert('Payment successful! Your subscription has been activated.');
-            loadData();
+            console.log('Payment verification result:', verificationResult);
+
+            // Show detailed success message
+            const message = `🎉 Payment Successful!\n\n✅ Subscription: ${plan.name}\n💰 Amount: ₹${plan.price}\n📅 Valid until: ${new Date(verificationResult.subscriptionEndDate).toLocaleDateString()}\n🆔 Payment ID: ${verificationResult.paymentId}`;
+            
+            alert(message);
+            
+            // Refresh subscription data and navigate
+            await loadData();
             navigate('/subjects');
           } catch (error: unknown) {
-            console.error('Payment verification failed:', error instanceof Error ? error.message : 'Unknown error');
-            setError('Payment verification failed. Please contact support.');
+            console.error('Payment verification failed:', error);
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            setError(`Payment verification failed: ${errorMessage}. Please contact support with payment ID: ${response.razorpay_payment_id}`);
           }
         },
         prefill: {
@@ -145,8 +161,18 @@ export default function Subscription() {
         },
         modal: {
           ondismiss: () => {
+            console.log('Payment modal closed by user');
             setIsProcessing(false);
-          }
+          },
+          // Handle payment failures
+          escape: false,
+          animation: true
+        },
+        // Handle payment failures
+        error: (error: any) => {
+          console.error('Razorpay payment error:', error);
+          setError(`Payment failed: ${error.description || 'Unknown error'}. Please try again.`);
+          setIsProcessing(false);
         }
       };
 

@@ -207,7 +207,6 @@ export function SignupForm({ onSignup, onSwitchToLogin, isLoading = false }: Sig
                       <SelectValue placeholder="Select your class" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="5">Class 5</SelectItem>
                       <SelectItem value="6">Class 6</SelectItem>
                       <SelectItem value="7">Class 7</SelectItem>
                       <SelectItem value="8">Class 8</SelectItem>
@@ -324,17 +323,17 @@ export function SignupForm({ onSignup, onSwitchToLogin, isLoading = false }: Sig
             </form>
 
             {/* Divider */}
-            <div className="relative">
+            {/* <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300 dark:border-gray-600" />
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">Or continue with</span>
               </div>
-            </div>
+            </div> */}
 
             {/* Social Signup Buttons */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="outline"
                 className="h-12 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border-white/20 hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all duration-300"
@@ -356,7 +355,7 @@ export function SignupForm({ onSignup, onSwitchToLogin, isLoading = false }: Sig
                 </svg>
                 Twitter
               </Button>
-            </div>
+            </div> */}
 
             {/* Sign In Link */}
             <div className="text-center">

@@ -158,17 +158,17 @@ export function LoginForm({ onLogin, onSwitchToSignup, isLoading = false }: Logi
             </form>
 
             {/* Divider */}
-            <div className="relative">
+            {/* <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300 dark:border-gray-600" />
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">Or continue with</span>
               </div>
-            </div>
+            </div> */}
 
             {/* Social Login Buttons */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="outline"
                 className="h-12 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border-white/20 hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all duration-300"
@@ -190,7 +190,7 @@ export function LoginForm({ onLogin, onSwitchToSignup, isLoading = false }: Logi
                 </svg>
                 Twitter
               </Button>
-            </div>
+            </div> */}
 
             {/* Sign Up Link */}
             <div className="text-center">

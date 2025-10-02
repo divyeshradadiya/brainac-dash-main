@@ -112,34 +112,44 @@ class ApiService {
   }
 
   async getSubscriptionStatus(): Promise<SubscriptionStatusResponse> {
-    const response = await this.makeRequest<ApiResponse<SubscriptionStatusResponse>>('/subscription/status');
-    return response.data;
+    return this.makeRequest<SubscriptionStatusResponse>('/subscription/status');
   }
 
   async getSubscriptionPlans(): Promise<SubscriptionPlan[]> {
-    const response = await this.makeRequest<ApiResponse<{plans: SubscriptionPlan[]}>>('/subscription/plans');
-    return response.data.plans || [];
+    const response = await this.makeRequest<{plans: SubscriptionPlan[]}>('/subscription/plans');
+    return response.plans || [];
   }
 
-  async createPaymentOrder(planId: string, amount: number): Promise<{ orderId: string; amount: number; currency: string; key: string }> {
-    const response = await this.makeRequest<ApiResponse<{ orderId: string; amount: number; currency: string; key: string }>>('/subscription/create-order', {
-      method: 'POST',
-      body: JSON.stringify({ planId, amount }),
-    });
-    return response.data;
-  }
-
-  async verifyPayment(data: {
+  async createPaymentOrder(planId: string, amount: number): Promise<{ orderId: string; amount: number; currency: string; key: string; isMock?: boolean }> {
+    console.log('API: Creating payment order with', { planId, amount });
+    
+    try {
+      const response = await this.makeRequest<{ orderId: string; amount: number; currency: string; key: string; isMock?: boolean }>('/subscription/create-order', {
+        method: 'POST',
+        body: JSON.stringify({ planId, amount }),
+      });
+      
+      console.log('API: Order response:', response);
+      
+      if (!response || !response.orderId) {
+        throw new Error('Invalid order response structure');
+      } 
+      
+      return response;
+    } catch (error) {
+      console.error('API: Error creating payment order:', error);
+      throw error;
+    }
+  }  async verifyPayment(data: {
     razorpay_order_id: string;
     razorpay_payment_id: string;
     razorpay_signature: string;
     planId: string;
   }): Promise<{ message: string; subscriptionStatus: string; subscriptionPlan: string; subscriptionEndDate: string; paymentId: string }> {
-    const response = await this.makeRequest<ApiResponse<{ message: string; subscriptionStatus: string; subscriptionPlan: string; subscriptionEndDate: string; paymentId: string }>>('/subscription/verify-payment', {
+    return this.makeRequest<{ message: string; subscriptionStatus: string; subscriptionPlan: string; subscriptionEndDate: string; paymentId: string }>('/subscription/verify-payment', {
       method: 'POST',
       body: JSON.stringify(data),
     });
-    return response.data;
   }
 }
 
