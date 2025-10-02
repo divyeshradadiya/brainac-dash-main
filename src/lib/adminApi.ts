@@ -16,7 +16,9 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 class AdminApiService {
   private getAuthHeaders(): HeadersInit {
-    const token = localStorage.getItem('brainac_auth_token');
+    // Try admin token first, fallback to regular auth token
+    const adminToken = localStorage.getItem('brainac_admin_token');
+    const token = adminToken || localStorage.getItem('brainac_auth_token');
     return {
       'Content-Type': 'application/json',
       Authorization: token ? `Bearer ${token}` : 'Bearer dev-token',

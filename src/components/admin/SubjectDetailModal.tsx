@@ -19,7 +19,9 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 // Helper function for authenticated requests
 const makeAuthenticatedRequest = async (endpoint: string, options: RequestInit = {}) => {
-  const token = localStorage.getItem('brainac_auth_token');
+  // Try admin token first, fallback to regular auth token
+  const adminToken = localStorage.getItem('brainac_admin_token');
+  const token = adminToken || localStorage.getItem('brainac_auth_token');
   const url = `${API_BASE_URL}${endpoint}`;
   
   const response = await fetch(url, {

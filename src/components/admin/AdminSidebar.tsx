@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -60,6 +60,16 @@ const adminMenuItems = [
 
 export function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear admin tokens from localStorage
+    localStorage.removeItem('brainac_admin_token');
+    localStorage.removeItem('brainac_admin_email');
+    
+    // Redirect to admin login page
+    navigate('/admin/login');
+  };
 
   return (
     <div className={cn(
@@ -160,6 +170,7 @@ export function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
 
         <Button
           variant="ghost"
+          onClick={handleLogout}
           className={cn(
             "w-full justify-start text-gray-700 hover:text-red-600 hover:bg-red-50 dark:text-gray-300 dark:hover:text-red-400 dark:hover:bg-red-900/20",
             isCollapsed && "justify-center px-0"

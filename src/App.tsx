@@ -27,6 +27,8 @@ import AdminSubjects from "./pages/admin/Subjects";
 import AdminVideos from "./pages/admin/Videos";
 import AdminUsers from "./pages/admin/Users";
 import AdminPayments from "./pages/admin/Payments";
+import AdminLogin from "./pages/admin/AdminLogin";
+import { ProtectedAdminRoute } from "./components/auth/ProtectedAdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -107,31 +109,19 @@ const App = () => (
                   <Subscription />
                 </ProtectedRoute>
               } />
-              <Route path="/admin" element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/subjects" element={
-                <ProtectedRoute>
-                  <AdminSubjects />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/videos" element={
-                <ProtectedRoute>
-                  <AdminVideos />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/users" element={
-                <ProtectedRoute>
-                  <AdminUsers />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/payments" element={
-                <ProtectedRoute>
-                  <AdminPayments />
-                </ProtectedRoute>
-              } />
+              
+              {/* Admin Login Route (unprotected) */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              
+              {/* Protected Admin Routes */}
+              <Route element={<ProtectedAdminRoute />}>
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/subjects" element={<AdminSubjects />} />
+                <Route path="/admin/videos" element={<AdminVideos />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/payments" element={<AdminPayments />} />
+              </Route>
             <Route path="/groups" element={
                 <ProtectedRoute>
                   <SubscriptionGuard>
