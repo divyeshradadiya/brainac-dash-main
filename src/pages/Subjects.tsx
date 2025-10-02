@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Play, Clock, Star, ArrowLeft, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { apiService } from "@/lib/api";
-import type { Subject, Video, SubjectsResponse, VideosResponse } from "@/types/api";
+import type {
+  Subject,
+  Video,
+  SubjectsResponse,
+  VideosResponse,
+} from "@/types/api";
 
 function Subjects() {
   const { subjectId } = useParams<{ subjectId?: string }>();
@@ -19,7 +24,7 @@ function Subjects() {
 
   useEffect(() => {
     if (!isAuthenticated || !user) {
-      navigate('/signin');
+      navigate("/signin");
       return;
     }
     loadSubjects();
@@ -30,8 +35,8 @@ function Subjects() {
       const response: VideosResponse = await apiService.getVideos(subjectId);
       setVideos(response.videos || []);
     } catch (error: unknown) {
-      console.error('Failed to load videos:', error);
-      setError('Failed to load videos for this subject.');
+      console.error("Failed to load videos:", error);
+      setError("Failed to load videos for this subject.");
     }
   }, [subjectId]);
 
@@ -47,14 +52,12 @@ function Subjects() {
       const response: SubjectsResponse = await apiService.getSubjects();
       setSubjects(response.subjects || []);
     } catch (error: unknown) {
-      console.error('Failed to load subjects:', error);
-      setError('Failed to load subjects. Please try again.');
+      console.error("Failed to load subjects:", error);
+      setError("Failed to load subjects. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
-
-
 
   const handleVideoClick = (videoId: string) => {
     navigate(`/video/${videoId}`);
@@ -83,7 +86,9 @@ function Subjects() {
         <Card className="max-w-md mx-auto text-center p-6">
           <CardContent>
             <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Error Loading Content</h2>
+            <h2 className="text-xl font-semibold mb-2">
+              Error Loading Content
+            </h2>
             <p className="text-gray-600 mb-4">{error}</p>
             <Button onClick={loadSubjects} className="w-full">
               Try Again
@@ -104,10 +109,14 @@ function Subjects() {
                 Class {user?.grade} Subjects
               </h1>
               <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-                Explore interactive lessons, practice exercises, and educational videos designed for your grade level.
+                Explore interactive lessons, practice exercises, and educational
+                videos designed for your grade level.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                <Badge
+                  variant="secondary"
+                  className="bg-white/20 text-white border-white/30"
+                >
                   {subjects.length} Subjects Available
                 </Badge>
               </div>
@@ -119,7 +128,7 @@ function Subjects() {
           <div className="max-w-6xl mx-auto">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {subjects.map((subject) => (
-                <Card 
+                <Card
                   key={subject.id}
                   className="group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-0 shadow-lg bg-white/80 backdrop-blur-sm"
                   onClick={() => handleSubjectClick(subject)}
@@ -132,7 +141,9 @@ function Subjects() {
                       </h3>
                       <div className="flex items-center justify-center gap-2 mt-4">
                         <Play className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm text-gray-600">Explore Content</span>
+                        <span className="text-sm text-gray-600">
+                          Explore Content
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -145,7 +156,7 @@ function Subjects() {
     );
   }
 
-  const currentSubject = subjects.find(s => s.id === subjectId);
+  const currentSubject = subjects.find((s) => s.id === subjectId);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -154,13 +165,13 @@ function Subjects() {
           <div className="max-w-6xl mx-auto">
             <Button
               variant="ghost"
-              onClick={() => navigate('/subjects')}
+              onClick={() => navigate("/subjects")}
               className="mb-4 text-white hover:text-white hover:bg-white/20"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Subjects
             </Button>
-            
+
             <div className="flex items-center gap-4">
               <div className="text-5xl">{currentSubject?.icon}</div>
               <div>
@@ -191,7 +202,7 @@ function Subjects() {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {videos.map((video) => (
-                <Card 
+                <Card
                   key={video.id}
                   className="group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-0 shadow-lg bg-white/80 backdrop-blur-sm"
                   onClick={() => handleVideoClick(video.id)}

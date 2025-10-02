@@ -97,18 +97,16 @@ class ApiService {
   }
 
   async getSubjectDetails(subjectId: string): Promise<any> {
-    return  this.makeRequest<ApiResponse<any>>(`/subjects/${subjectId}`);
+    return this.makeRequest<any>(`/subjects/${subjectId}`);
   }
 
   async getVideos(subjectId?: string): Promise<VideosResponse> {
     const endpoint = subjectId ? `/subjects/${subjectId}/videos` : '/subjects/all/videos';
-    const response = await this.makeRequest<ApiResponse<VideosResponse>>(endpoint);
-    return response.data;
+    return this.makeRequest<VideosResponse>(endpoint);
   }
 
   async getVideo(videoId: string): Promise<VideoResponse> {
-    const response = await this.makeRequest<ApiResponse<VideoResponse>>(`/subjects/videos/${videoId}`);
-    return response.data;
+    return this.makeRequest<VideoResponse>(`/subjects/videos/${videoId}`);
   }
 
   async getSubscriptionStatus(): Promise<SubscriptionStatusResponse> {

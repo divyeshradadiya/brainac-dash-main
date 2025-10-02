@@ -145,7 +145,7 @@ export default function Subscription() {
             
             // Refresh subscription data and navigate
             await loadData();
-            navigate('/subjects');
+            navigate('/subjects-list');
           } catch (error: unknown) {
             console.error('Payment verification failed:', error);
             const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -301,7 +301,7 @@ export default function Subscription() {
                   
                   <Button
                     onClick={() => handleSubscribe(plan)}
-                    disabled={isProcessing || subscriptionStatus?.subscriptionStatus === 'active'}
+                    disabled={isProcessing || (subscriptionStatus?.subscriptionStatus === 'active' && subscriptionStatus?.subscriptionPlan === plan.id)}
                     className={`w-full ${
                       plan.popular 
                         ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700' 
@@ -313,7 +313,7 @@ export default function Subscription() {
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                         Processing...
                       </div>
-                    ) : subscriptionStatus?.subscriptionStatus === 'active' ? (
+                    ) : (subscriptionStatus?.subscriptionStatus === 'active' && subscriptionStatus?.subscriptionPlan === plan.id) ? (
                       'Current Plan'
                     ) : (
                       `Subscribe Now`
