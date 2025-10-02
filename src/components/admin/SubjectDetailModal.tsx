@@ -173,6 +173,10 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
     }
   }, [subject, isOpen]);
 
+  useEffect(() => {
+    console.log('Videos state updated:', videos.length, videos);
+  }, [videos]);
+
   const fetchSubjectData = async () => {
     if (!subject) return;
     
@@ -199,14 +203,18 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
       }
       setChapters(chaptersData);
 
-      // Fetch all videos for this subject
+      // Fetch all videos for this subject using direct API call
       try {
-        const videosResponse = await adminApiService.getVideos({ subject: subject.name });
-        if (videosResponse.success) {
-          setVideos(videosResponse.data.videos || []);
+        const videosData = await makeAuthenticatedRequest(`/admin/videos?subject=${encodeURIComponent(subject.name)}`);
+        if (videosData.success && videosData.data?.videos) {
+          console.log('Fetched videos:', videosData.data.videos);
+          setVideos(videosData.data.videos);
+        } else {
+          console.log('No videos found or invalid response:', videosData);
+          setVideos([]);
         }
       } catch (videoError) {
-        console.log('Could not fetch videos:', videoError);
+        console.error('Error fetching videos:', videoError);
         setVideos([]);
       }
 
@@ -337,6 +345,113 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
     }
   };
 
+  const updateUnit = async () => {
+    if (!editingUnit) return;
+
+    try {
+      const data = await makeAuthenticatedRequest(`/admin/units/${editingUnit.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(unitForm)
+      });
+
+      if (data.success) {
+        setUnits(units.map(u => u.id === editingUnit.id ? { ...u, ...unitForm } : u));
+        setShowUnitForm(false);
+        resetUnitForm();
+        onUpdate();
+      }
+    } catch (err) {
+      console.error('Error updating unit:', err);
+      setError('Failed to update unit');
+    }
+  };
+
+  const updateChapter = async () => {
+    if (!editingChapter) return;
+
+    try {
+      const data = await makeAuthenticatedRequest(`/admin/chapters/${editingChapter.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(chapterForm)
+      });
+
+      if (data.success) {
+        setChapters(chapters.map(c => c.id === editingChapter.id ? { ...c, ...chapterForm } : c));
+        setShowChapterForm(false);
+        resetChapterForm();
+        onUpdate();
+      }
+    } catch (err) {
+      console.error('Error updating chapter:', err);
+      setError('Failed to update chapter');
+    }
+  };
+
+  const updateVideo = async () => {
+    if (!editingVideo) return;
+
+    try {
+      const videoData = {
+        ...videoForm,
+        tags: videoForm.tags.split(',').map(tag => tag.trim()).filter(Boolean)
+      };
+
+      const data = await makeAuthenticatedRequest(`/admin/videos/${editingVideo.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(videoData)
+      });
+
+      if (data.success) {
+        setVideos(videos.map(v => v.id === editingVideo.id ? { ...v, ...data.data } : v));
+        setShowVideoForm(false);
+        resetVideoForm();
+        onUpdate();
+      }
+    } catch (err) {
+      console.error('Error updating video:', err);
+      setError('Failed to update video');
+    }
+  };
+
+  const startEditUnit = (unit: Unit) => {
+    setEditingUnit(unit);
+    setUnitForm({
+      name: unit.name,
+      description: unit.description,
+      order: unit.order
+    });
+    setShowUnitForm(true);
+  };
+
+  const startEditChapter = (chapter: Chapter) => {
+    setEditingChapter(chapter);
+    setChapterForm({
+      name: chapter.name,
+      description: chapter.description,
+      order: chapter.order
+    });
+    const unit = units.find(u => u.id === chapter.unitId);
+    if (unit) setSelectedUnit(unit);
+    setShowChapterForm(true);
+  };
+
+  const startEditVideo = (video: VideoItem) => {
+    setEditingVideo(video);
+    setVideoForm({
+      title: video.title,
+      description: video.description,
+      videoUrl: video.videoUrl,
+      duration: video.duration,
+      thumbnail: video.thumbnail,
+      tags: video.tags.join(', '),
+      difficulty: video.difficulty,
+      order: video.order
+    });
+    const chapter = chapters.find(c => c.id === video.chapterId);
+    if (chapter) setSelectedChapter(chapter);
+    setShowVideoForm(true);
+  };
+
   const resetUnitForm = () => {
     setUnitForm({ name: '', description: '', order: 1 });
     setEditingUnit(null);
@@ -415,7 +530,7 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
             {showUnitForm && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Create New Unit</CardTitle>
+                  <CardTitle>{editingUnit ? 'Edit Unit' : 'Create New Unit'}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -446,7 +561,9 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={createUnit}>Create Unit</Button>
+                    <Button onClick={editingUnit ? updateUnit : createUnit}>
+                      {editingUnit ? 'Update Unit' : 'Create Unit'}
+                    </Button>
                     <Button variant="outline" onClick={() => { setShowUnitForm(false); resetUnitForm(); }}>
                       Cancel
                     </Button>
@@ -471,15 +588,8 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
                         <Button 
                           size="sm" 
                           variant="outline"
-                          onClick={() => {
-                            setSelectedUnit(unit);
-                            setShowChapterForm(true);
-                          }}
+                          onClick={() => startEditUnit(unit)}
                         >
-                          <Plus className="w-4 h-4 mr-1" />
-                          Add Chapter
-                        </Button>
-                        <Button size="sm" variant="outline">
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button size="sm" variant="destructive" onClick={() => deleteUnit(unit.id)}>
@@ -501,14 +611,57 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
           <TabsContent value="chapters" className="space-y-4 max-h-[60vh] overflow-y-auto">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">Chapters</h3>
+              <div className="flex gap-2">
+                <select
+                  className="px-3 py-2 border border-gray-300 rounded-md"
+                  value={selectedUnit?.id || ''}
+                  onChange={(e) => {
+                    const unit = units.find(u => u.id === e.target.value);
+                    setSelectedUnit(unit || null);
+                  }}
+                >
+                  <option value="">Select Unit</option>
+                  {units.map(unit => (
+                    <option key={unit.id} value={unit.id}>{unit.name}</option>
+                  ))}
+                </select>
+                <Button 
+                  onClick={() => {
+                    if (selectedUnit) {
+                      resetChapterForm();
+                      setEditingChapter(null);
+                      setShowChapterForm(true);
+                    }
+                  }} 
+                  size="sm"
+                  disabled={!selectedUnit}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Chapter
+                </Button>
+              </div>
             </div>
 
             {showChapterForm && selectedUnit && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Create Chapter in "{selectedUnit.name}"</CardTitle>
+                  <CardTitle>{editingChapter ? 'Edit Chapter' : 'Add New Chapter'}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {!editingChapter && (
+                    <div className="bg-blue-50 border border-blue-200 p-3 rounded-md">
+                      <p className="text-sm text-blue-800">
+                        Creating chapter in unit: <strong>{selectedUnit.name}</strong>
+                      </p>
+                    </div>
+                  )}
+                  {editingChapter && (
+                    <div className="bg-blue-50 border border-blue-200 p-3 rounded-md">
+                      <p className="text-sm text-blue-800">
+                        Editing chapter in unit: <strong>{selectedUnit.name}</strong>
+                      </p>
+                    </div>
+                  )}
                   <div>
                     <Label htmlFor="chapter-name">Chapter Name</Label>
                     <Input
@@ -537,7 +690,9 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={createChapter}>Create Chapter</Button>
+                    <Button onClick={editingChapter ? updateChapter : createChapter}>
+                      {editingChapter ? 'Update Chapter' : 'Create Chapter'}
+                    </Button>
                     <Button variant="outline" onClick={() => { setShowChapterForm(false); resetChapterForm(); setSelectedUnit(null); }}>
                       Cancel
                     </Button>
@@ -565,15 +720,8 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
                           <Button 
                             size="sm" 
                             variant="outline"
-                            onClick={() => {
-                              setSelectedChapter(chapter);
-                              setShowVideoForm(true);
-                            }}
+                            onClick={() => startEditChapter(chapter)}
                           >
-                            <Plus className="w-4 h-4 mr-1" />
-                            Add Video
-                          </Button>
-                          <Button size="sm" variant="outline">
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button size="sm" variant="destructive" onClick={() => deleteChapter(chapter.id)}>
@@ -596,14 +744,78 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
           <TabsContent value="videos" className="space-y-4 max-h-[60vh] overflow-y-auto">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">Videos</h3>
+              <div className="flex gap-2">
+                <select
+                  className="px-3 py-2 border border-gray-300 rounded-md"
+                  value={selectedChapter?.id || ''}
+                  onChange={(e) => {
+                    const chapter = chapters.find(c => c.id === e.target.value);
+                    setSelectedChapter(chapter || null);
+                  }}
+                >
+                  <option value="">Select Chapter</option>
+                  {chapters.map(chapter => {
+                    const unit = units.find(u => u.id === chapter.unitId);
+                    return (
+                      <option key={chapter.id} value={chapter.id}>
+                        {unit?.name} - {chapter.name}
+                      </option>
+                    );
+                  })}
+                </select>
+                <Button 
+                  onClick={() => {
+                    if (selectedChapter) {
+                      resetVideoForm();
+                      setEditingVideo(null);
+                      setShowVideoForm(true);
+                    }
+                  }} 
+                  size="sm"
+                  disabled={!selectedChapter}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Video
+                </Button>
+              </div>
             </div>
 
             {showVideoForm && selectedChapter && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Add Video to "{selectedChapter.name}"</CardTitle>
+                  <CardTitle>{editingVideo ? 'Edit Video' : 'Add New Video'}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {!editingVideo && (
+                    <div>
+                      <Label htmlFor="video-chapter">Select Chapter</Label>
+                      <select
+                        id="video-chapter"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        value={selectedChapter?.id || ''}
+                        onChange={(e) => {
+                          const chapter = chapters.find(c => c.id === e.target.value);
+                          setSelectedChapter(chapter || null);
+                        }}
+                      >
+                        {chapters.map(chapter => {
+                          const unit = units.find(u => u.id === chapter.unitId);
+                          return (
+                            <option key={chapter.id} value={chapter.id}>
+                              {unit?.name} - {chapter.name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                  )}
+                  {editingVideo && (
+                    <div className="bg-blue-50 border border-blue-200 p-3 rounded-md">
+                      <p className="text-sm text-blue-800">
+                        Editing video in: <strong>{chapters.find(c => c.id === selectedChapter.id)?.name}</strong>
+                      </p>
+                    </div>
+                  )}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="video-title">Video Title</Label>
@@ -685,7 +897,9 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={createVideo}>Add Video</Button>
+                    <Button onClick={editingVideo ? updateVideo : createVideo}>
+                      {editingVideo ? 'Update Video' : 'Add Video'}
+                    </Button>
                     <Button variant="outline" onClick={() => { setShowVideoForm(false); resetVideoForm(); setSelectedChapter(null); }}>
                       Cancel
                     </Button>
@@ -695,7 +909,19 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
             )}
 
             <div className="grid gap-4">
-              {videos.map((video) => {
+              {loading && (
+                <div className="text-center py-8 text-gray-500">
+                  Loading videos...
+                </div>
+              )}
+              
+              {!loading && videos.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No videos found. Select a chapter above and click "Add Video" to create one.
+                </div>
+              )}
+              
+              {!loading && videos.map((video) => {
                 const chapter = chapters.find(c => c.id === video.chapterId);
                 const unit = units.find(u => u.id === video.unitId);
                 return (
@@ -713,7 +939,11 @@ export function SubjectDetailModal({ subject, isOpen, onClose, onUpdate }: Subje
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => startEditVideo(video)}
+                          >
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button size="sm" variant="destructive" onClick={() => deleteVideo(video.id)}>
