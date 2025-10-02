@@ -1,25 +1,36 @@
 # 🧠 Brainac Admin Dashboard
 
-React admin dashboard frontend for the Brainac educational platform, providing a modern UI for managing educational content, user subscriptions, and platform administration.
+React admin dashboard frontend for the Brainac educational platform, providing a comprehensive interface for managing users, content, subscriptions, and platform analytics.
 
 ## 🌟 Features
 
 ### 🎨 Modern UI/UX
 - **Responsive Design** with Tailwind CSS
 - **Glass Morphism Effects** and gradient backgrounds
-- **Dark Mode Support** (ready)
+- **Dark Mode Support** with next-themes
 - **Component Library** with shadcn/ui components
+- **Advanced Charts** with Recharts for analytics
 
-### 📊 Dashboard Functionality
-- **User Management** with class-based profiles
-- **Subscription Monitoring** and payment tracking
-- **Content Administration** for subjects and videos
-- **Progress Analytics** and engagement metrics
+### 📊 Admin Dashboard Functionality
+- **User Management** - View, edit, search, and manage user accounts
+- **Content Management** - Administer subjects, videos, and educational content
+- **Payment Analytics** - Monitor subscriptions, payments, and revenue
+- **System Administration** - Comprehensive admin controls
+- **Real-time Data** with React Query for efficient data fetching
 
-### 🔐 Integrated Authentication
-- **Firebase Authentication** for secure admin access
+### 🔐 Authentication & Security
+- **Admin JWT Authentication** for secure dashboard access
+- **Firebase Integration** for user authentication
 - **Role-based Access Control** for admin features
-- **Session Management** with automatic token refresh
+- **Secure API Communication** with token management
+
+### 📱 User Interface Pages
+- **Dashboard Overview** - Key metrics and analytics
+- **User Management** - Complete user administration
+- **Subject Management** - Organize educational subjects
+- **Video Management** - Manage video content library
+- **Payment Tracking** - Monitor subscription payments
+- **Settings** - Platform configuration
 
 ## 🚀 Getting Started
 
@@ -51,10 +62,15 @@ React admin dashboard frontend for the Brainac educational platform, providing a
 
 - **React 18** with **TypeScript**
 - **Vite** for fast build and development
-- **Tailwind CSS** for styling
-- **shadcn/ui** for component library
-- **Firebase SDK** for client-side auth
-- **React Router** for navigation
+- **Tailwind CSS** for styling with custom animations
+- **shadcn/ui** for component library with Radix UI primitives
+- **React Query (TanStack)** for server state management
+- **React Router** for client-side routing
+- **React Hook Form** with Zod validation
+- **Firebase SDK** for authentication
+- **Recharts** for data visualization
+- **Lucide React** for icons
+- **Date-fns** for date manipulation
 
 ## 📱 Responsive Design
 
@@ -66,15 +82,17 @@ React admin dashboard frontend for the Brainac educational platform, providing a
 ## 🚀 Deployment
 
 1. Build for production: `npm run build`
-2. Deploy static files to Vercel, Netlify, or similar
-3. Configure environment variables
-4. Update CORS settings in backend
+2. Build for development: `npm run build:dev`
+3. Deploy static files to Vercel, Netlify, or similar
+4. Configure environment variables
+5. Update CORS settings in backend
 
 ## 🔧 Development Scripts
 
 ```bash
 npm run dev        # Start development server
 npm run build      # Build for production
+npm run build:dev  # Build for development
 npm run preview    # Preview production build
 npm run lint       # Lint code
 ```
