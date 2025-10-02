@@ -45,11 +45,12 @@ interface Payment {
   amount: number;
   currency: string;
   status: 'completed' | 'pending' | 'failed' | 'refunded';
-  paymentMethod: 'razorpay' | 'card' | 'upi' | 'netbanking';
+  paymentMethod?: 'razorpay' | 'card' | 'upi' | 'netbanking';
   planId: string;
   planName: string;
   razorpayPaymentId?: string;
   razorpayOrderId?: string;
+  razorpaySignature?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -107,10 +108,10 @@ export default function AdminPayments() {
         ...filters 
       });
       
-      setPayments(data.data.payments);
-      setTotalPayments(data.data.pagination.total_count);
-      setTotalPages(data.data.pagination.total_pages);
-      filterPayments(data.data.payments);
+      setPayments(data.payments);
+      setTotalPayments(data.pagination.total_count);
+      setTotalPages(data.pagination.total_pages);
+      filterPayments(data.payments);
     } catch (error) {
       console.error('Failed to fetch payments:', error);
       setError('Failed to load payments');
@@ -127,7 +128,7 @@ export default function AdminPayments() {
     }
 
     if (filters.method !== 'all') {
-      filtered = filtered.filter(payment => payment.paymentMethod === filters.method);
+      filtered = filtered.filter(payment => (payment.paymentMethod || 'razorpay') === filters.method);
     }
 
     if (filters.search) {
@@ -183,7 +184,7 @@ export default function AdminPayments() {
         payment.userEmail,
         `₹${payment.amount}`,
         payment.status,
-        payment.paymentMethod,
+        payment.paymentMethod || 'razorpay',
         payment.planName,
         payment.razorpayPaymentId || 'N/A'
       ].join(','))
@@ -439,7 +440,7 @@ export default function AdminPayments() {
                         {getStatusBadge(payment.status)}
                       </TableCell>
                       <TableCell>
-                        {getMethodBadge(payment.paymentMethod)}
+                        {getMethodBadge(payment.paymentMethod || 'razorpay')}
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">{payment.planName}</Badge>
