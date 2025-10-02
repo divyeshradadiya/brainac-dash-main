@@ -22,6 +22,7 @@ import Settings from "./pages/Settings";
 import { ThemeShowcase } from "@/components/ThemeShowcase";
 import NotFound from "./pages/NotFound";
 import Subscription from "./pages/Subscription";
+import AdminDashboard from "./pages/admin/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -98,10 +99,15 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/subscription" element={
-  <ProtectedRoute>
-    <Subscription />
-  </ProtectedRoute>
-} />
+                <ProtectedRoute>
+                  <Subscription />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
             <Route path="/groups" element={
                 <ProtectedRoute>
                   <SubscriptionGuard>
