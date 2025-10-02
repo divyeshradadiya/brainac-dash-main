@@ -30,7 +30,7 @@ interface Unit {
 interface Chapter {
   id: string;
   name: string;
-  unitId: number;
+  unitId: string;
   totalExplainers: number;
 }
 
@@ -130,7 +130,7 @@ export function BookDetail() {
         // Set active items to first available options
         if (subjectDetails.units?.length > 0) {
           const firstUnit = subjectDetails.units[0];
-          const firstChapter = subjectDetails.chapters?.find((ch: Chapter) => ch.unitId === parseInt(firstUnit.id));
+          const firstChapter = subjectDetails.chapters?.find((ch: Chapter) => ch.unitId === firstUnit.id);
           const firstExplainer = subjectDetails.explainers?.find((exp: Explainer) => exp.chapterId === firstChapter?.id);
           
           setActiveItems({
@@ -189,7 +189,7 @@ export function BookDetail() {
       // Reset dependent selections when parent changes
       if (section === 'units') {
         // Reset chapters and explainers when unit changes
-        const firstChapterForUnit = chapters.find((ch: Chapter) => ch.unitId === parseInt(itemId));
+        const firstChapterForUnit = chapters.find((ch: Chapter) => ch.unitId === itemId);
         newState.chapters = firstChapterForUnit ? firstChapterForUnit.id : prev.chapters;
         newState.explainers = "1";
       } else if (section === 'chapters') {
@@ -239,7 +239,7 @@ export function BookDetail() {
 
   const renderUnits = () => (
     <div className="space-y-3">
-      {units.map((unit) => (
+      {units.map((unit, index) => (
         <div
           key={unit.id}
           className={`group relative p-3 rounded-xl border-2 transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-[1.02] ${
@@ -252,11 +252,11 @@ export function BookDetail() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs transition-all duration-300 ${
-                activeItems.units === unit.id.toString() 
-                  ? "bg-gradient-to-br from-primary to-secondary scale-110" 
-                  : "bg-gradient-to-br from-muted to-muted/80 group-hover:from-primary/80 group-hover:to-secondary/80"
+                // activeItems.units === unit.id.toString() 
+                  "bg-gradient-to-br from-primary to-secondary scale-110" 
+                  // : "bg-gradient-to-br from-muted to-muted/80 group-hover:from-primary/80 group-hover:to-secondary/80"
               }`}>
-                {unit.id}
+                {index + 1}
               </div>
               <span className={`font-semibold text-sm transition-colors duration-300 ${
                 activeItems.units === unit.id.toString() ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
@@ -274,7 +274,7 @@ export function BookDetail() {
   );
 
   const renderChapters = () => {
-    const selectedUnit = parseInt(activeItems.units);
+    const selectedUnit = activeItems.units;
     const filteredChapters = chapters.filter((chapter: Chapter) => 
       chapter.unitId === selectedUnit
     );
@@ -282,7 +282,7 @@ export function BookDetail() {
     return (
       <div className="space-y-3">
         {filteredChapters.length > 0 ? (
-          filteredChapters.map((chapter) => (
+          filteredChapters.map((chapter, index) => (
             <div
               key={chapter.id}
               className={`group relative p-3 rounded-xl border-2 transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-[1.02] ${
@@ -295,11 +295,11 @@ export function BookDetail() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs transition-all duration-300 ${
-                    activeItems.chapters === chapter.id 
-                      ? "bg-gradient-to-br from-secondary to-success scale-110" 
-                      : "bg-gradient-to-br from-muted to-muted/80 group-hover:from-secondary/80 group-hover:to-success/80"
+                    // activeItems.chapters === chapter.id 
+                       "bg-gradient-to-br from-secondary to-success scale-110" 
+                      // : "bg-gradient-to-br from-muted to-muted/80 group-hover:from-secondary/80 group-hover:to-success/80"
                   }`}>
-                    {chapter.id}
+                    {index + 1}
                   </div>
                   <div className="flex-1">
                     <div className={`font-semibold text-sm transition-colors duration-300 ${
