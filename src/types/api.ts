@@ -8,6 +8,7 @@ export interface User {
   subscriptionStatus: 'trial' | 'active' | 'expired' | 'cancelled';
   trialEndDate?: string;
   subscriptionEndDate?: string;
+  cancelledAt?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -139,6 +140,12 @@ export interface VerifyPaymentResponse {
   paymentId: string;
 }
 
+export interface CancelSubscriptionResponse {
+  message: string;
+  subscriptionStatus: string;
+  cancelledAt: string;
+}
+
 // Request types
 export interface RegisterRequest {
   email: string;
@@ -159,8 +166,24 @@ export interface CreateOrderRequest {
   amount: number;
 }
 
+export interface CreatePlanRequest {
+  planId: string;
+}
+
+export interface CreateSubscriptionRequest {
+  planId: string;
+  razorpayPlanId: string;
+}
+
 export interface VerifyPaymentRequest {
   razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  planId: string;
+}
+
+export interface VerifySubscriptionPaymentRequest {
+  razorpay_subscription_id: string;
   razorpay_payment_id: string;
   razorpay_signature: string;
   planId: string;

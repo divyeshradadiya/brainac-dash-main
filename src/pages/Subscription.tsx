@@ -7,9 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Crown, Zap, Shield, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/lib/api';
+import type { CancelSubscriptionResponse } from '@/types/api';
 
 interface RazorpayResponse {
-  razorpay_order_id: string;
+  razorpay_subscription_id: string;
   razorpay_payment_id: string;
   razorpay_signature: string;
 }
@@ -62,6 +63,7 @@ export default function Subscription() {
   const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -99,47 +101,79 @@ export default function Subscription() {
       setIsProcessing(true);
       setError(null);
 
-      // Load Razorpay script
+      // Step 1: Create subscription plan in Razorpay
+      console.log('Creating subscription plan for:', plan.id);
+      const planResponse = await apiService.createSubscriptionPlan(plan.id);
+      console.log('Plan created:', planResponse);
+
+      // Step 2: Create subscription using the plan
+      console.log('Creating subscription with plan:', planResponse.planId);
+      const subscriptionResponse = await apiService.createSubscription(plan.id, planResponse.planId);
+      console.log('Subscription created:', subscriptionResponse);
+
+      // Step 3: Load Razorpay script
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
         throw new Error('Failed to load payment gateway. Please try again.');
       }
 
-      // Create payment order
-      const amount = plan.price * 100; // Convert to paise
-      console.log('Creating payment order for plan:', plan.id, 'amount:', amount);
-      
-      const orderResponse = await apiService.createPaymentOrder(plan.id, amount);
-      console.log('Order response received:', orderResponse);
-      
-      if (!orderResponse || !orderResponse.key || !orderResponse.orderId) {
-        throw new Error('Invalid payment order response from server');
-      }
-
-      // Initialize Razorpay payment
+      // Step 4: Open Razorpay checkout for subscription
       const options = {
-        key: orderResponse.key,
-        amount: orderResponse.amount,
-        currency: orderResponse.currency,
+        key: subscriptionResponse.key,
+        subscription_id: subscriptionResponse.subscriptionId,
         name: 'Brainac',
-        description: `Subscribe to ${plan.name}`,
-        order_id: orderResponse.orderId,
+        description: `Subscribe to ${plan.name} - Recurring Subscription`,
+        
+        // Payment method configuration for subscriptions
+        config: {
+          display: {
+            blocks: {
+              banks: {
+                name: 'Pay with Bank Transfer',
+                instruments: [
+                  {
+                    method: 'netbanking'
+                  },
+                  {
+                    method: 'upi'
+                  }
+                ]
+              },
+              card: {
+                name: 'Credit/Debit Card',
+                instruments: [
+                  {
+                    method: 'card'
+                  }
+                ]
+              }
+            },
+            sequence: ['card', 'banks'],
+            preferences: {
+              show_default_blocks: true
+            }
+          }
+        },
+        
+        // Enable recurring payment methods
+        recurring: 1,
+        
         handler: async (response: RazorpayResponse) => {
           try {
-            console.log('Payment completed, verifying...', response);
+            console.log('Subscription payment completed, verifying...', response);
             
-            // Verify payment
-            const verificationResult = await apiService.verifyPayment({
-              razorpay_order_id: response.razorpay_order_id,
+            // Verify subscription payment
+            const verificationResult = await apiService.verifySubscriptionPayment({
+              razorpay_subscription_id: response.razorpay_subscription_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
               planId: plan.id
             });
 
-            console.log('Payment verification result:', verificationResult);
+            console.log('Subscription payment verification result:', verificationResult);
 
             // Show detailed success message
-            const message = `🎉 Payment Successful!\n\n✅ Subscription: ${plan.name}\n💰 Amount: ₹${plan.price}\n📅 Valid until: ${new Date(verificationResult.subscriptionEndDate).toLocaleDateString()}\n🆔 Payment ID: ${verificationResult.paymentId}`;
+            const message = `🎉 Subscription Successful!\n\n✅ Plan: ${plan.name}\n💰 Amount: ₹${plan.price}/billing cycle\n📅 Valid until: ${new Date(verificationResult.subscriptionEndDate).toLocaleDateString()}\n🔄 Auto-renewal: Enabled\n🆔 Subscription ID: ${verificationResult.subscriptionId}\n🆔 Payment ID: ${verificationResult.paymentId}`;
             
             alert(message);
             
@@ -147,9 +181,9 @@ export default function Subscription() {
             await loadData();
             navigate('/subjects-list');
           } catch (error: unknown) {
-            console.error('Payment verification failed:', error);
+            console.error('Subscription payment verification failed:', error);
             const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-            setError(`Payment verification failed: ${errorMessage}. Please contact support with payment ID: ${response.razorpay_payment_id}`);
+            setError(`Subscription verification failed: ${errorMessage}. Please contact support with payment ID: ${response.razorpay_payment_id}`);
           }
         },
         prefill: {
@@ -161,28 +195,53 @@ export default function Subscription() {
         },
         modal: {
           ondismiss: () => {
-            console.log('Payment modal closed by user');
+            console.log('Subscription modal closed by user');
             setIsProcessing(false);
           },
-          // Handle payment failures
           escape: false,
           animation: true
         },
-        // Handle payment failures
-        error: (error: any) => {
-          console.error('Razorpay payment error:', error);
-          setError(`Payment failed: ${error.description || 'Unknown error'}. Please try again.`);
-          setIsProcessing(false);
+        notes: {
+          plan_type: plan.id,
+          user_email: user?.email || '',
+          billing_cycle: plan.duration
         }
       };
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (error: unknown) {
-      console.error('Payment initiation failed:', error instanceof Error ? error.message : 'Unknown error');
-      setError(error instanceof Error ? error.message : 'Failed to initiate payment.');
+      console.error('Subscription initiation failed:', error instanceof Error ? error.message : 'Unknown error');
+      setError(error instanceof Error ? error.message : 'Failed to initiate subscription.');
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const handleCancelSubscription = async () => {
+    if (!window.confirm('Are you sure you want to cancel your subscription? You will lose access to premium content immediately.')) {
+      return;
+    }
+
+    try {
+      setIsCancelling(true);
+      setError(null);
+
+      const result = await apiService.cancelSubscription();
+      
+      console.log('Subscription cancelled:', result);
+      
+      // Show success message
+      alert(`✅ Subscription cancelled successfully!\n\nYour subscription has been cancelled and you will no longer be charged. Thank you for using Brainac!`);
+      
+      // Refresh subscription data
+      await loadData();
+    } catch (error: unknown) {
+      console.error('Failed to cancel subscription:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setError(`Failed to cancel subscription: ${errorMessage}. Please try again or contact support.`);
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -223,12 +282,18 @@ export default function Subscription() {
                 <p className="text-sm text-blue-100">
                   Current Status: <span className="font-semibold">
                     {subscriptionStatus.subscriptionStatus === 'active' ? '✅ Active Subscription' : 
-                     subscriptionStatus.subscriptionStatus === 'trial' ? '🎁 Free Trial' : '❌ Expired'}
+                     subscriptionStatus.subscriptionStatus === 'trial' ? '🎁 Free Trial' : 
+                     subscriptionStatus.subscriptionStatus === 'cancelled' ? '❌ Cancelled' : '❌ Expired'}
                   </span>
                 </p>
-                {subscriptionStatus.daysRemaining > 0 && (
+                {subscriptionStatus.daysRemaining > 0 && subscriptionStatus.subscriptionStatus !== 'cancelled' && (
                   <p className="text-xs text-blue-200">
                     {subscriptionStatus.daysRemaining} days remaining
+                  </p>
+                )}
+                {subscriptionStatus.subscriptionStatus === 'cancelled' && (
+                  <p className="text-xs text-blue-200">
+                    Subscription cancelled - Subscribe again to regain access
                   </p>
                 )}
               </div>
@@ -245,6 +310,58 @@ export default function Subscription() {
               <AlertCircle className="h-5 w-5 text-red-600 mr-3" />
               <p className="text-red-800">{error}</p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Current Subscription Management */}
+      {subscriptionStatus?.subscriptionStatus === 'active' && (
+        <div className="px-6 pt-6">
+          <div className="max-w-4xl mx-auto">
+            <Card className="bg-white border border-gray-200 shadow-lg">
+              <CardHeader className="text-center bg-gradient-to-r from-blue-50 to-purple-50">
+                <CardTitle className="text-xl font-bold text-gray-800 mb-2">
+                  Current Subscription
+                </CardTitle>
+                <div className="flex items-center justify-center space-x-4">
+                  <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
+                    {subscriptionStatus.subscriptionPlan?.toUpperCase() || 'ACTIVE'}
+                  </Badge>
+                  <span className="text-sm text-gray-600">
+                    {subscriptionStatus.daysRemaining} days remaining
+                  </span>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="px-6 pb-6">
+                <div className="text-center space-y-4">
+                  <p className="text-gray-600">
+                    You're currently enjoying premium access to all content. 
+                    You can cancel anytime - there are no commitments or cancellation fees.
+                  </p>
+                  
+                  <Button
+                    onClick={handleCancelSubscription}
+                    disabled={isCancelling}
+                    variant="outline"
+                    className="border-red-300 text-red-600 hover:bg-red-500 hover:border-red-400"
+                  >
+                    {isCancelling ? (
+                      <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600 mr-2"></div>
+                        Cancelling...
+                      </div>
+                    ) : (
+                      'Cancel Subscription'
+                    )}
+                  </Button>
+                  
+                  <p className="text-xs text-gray-500">
+                    Cancel anytime. No questions asked.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       )}
@@ -315,6 +432,8 @@ export default function Subscription() {
                       </div>
                     ) : (subscriptionStatus?.subscriptionStatus === 'active' && subscriptionStatus?.subscriptionPlan === plan.id) ? (
                       'Current Plan'
+                    ) : subscriptionStatus?.subscriptionStatus === 'cancelled' ? (
+                      'Subscribe Again'
                     ) : (
                       `Subscribe Now`
                     )}

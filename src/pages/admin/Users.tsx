@@ -324,6 +324,18 @@ export default function AdminUsers() {
 
           <Card>
             <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Cancelled</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">
+                {users.filter(u => u.subscriptionStatus === 'cancelled').length}
+              </div>
+              <p className="text-xs text-gray-500">Cancelled subscriptions</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">Revenue</CardTitle>
             </CardHeader>
             <CardContent>
