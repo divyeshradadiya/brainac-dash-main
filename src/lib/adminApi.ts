@@ -275,6 +275,41 @@ class AdminApiService {
       body: JSON.stringify({ reason }),
     });
   }
+
+  // Subscription Management
+  async getSubscriptions(filters?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    plan?: string;
+    search?: string;
+  }): Promise<any> {
+    const params = new URLSearchParams();
+    
+    if (filters?.page) params.append('page', filters.page.toString());
+    if (filters?.limit) params.append('limit', filters.limit.toString());
+    if (filters?.status) params.append('status', filters.status);
+    if (filters?.plan) params.append('plan', filters.plan);
+    if (filters?.search) params.append('search', filters.search);
+
+    const query = params.toString();
+    return this.makeRequest(`/admin/subscriptions${query ? `?${query}` : ''}`);
+  }
+
+  async getSubscriptionAnalytics(): Promise<any> {
+    return this.makeRequest('/admin/subscriptions/analytics');
+  }
+
+  async getSubscriptionDetails(subscriptionId: string): Promise<any> {
+    return this.makeRequest(`/admin/subscriptions/${subscriptionId}`);
+  }
+
+  async cancelSubscription(subscriptionId: string, reason?: string): Promise<{ message: string }> {
+    return this.makeRequest(`/admin/subscriptions/${subscriptionId}/cancel`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  }
 }
 
 export const adminApiService = new AdminApiService();

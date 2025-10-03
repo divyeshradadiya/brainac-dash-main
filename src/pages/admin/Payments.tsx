@@ -51,6 +51,29 @@ interface Payment {
   razorpayPaymentId?: string;
   razorpayOrderId?: string;
   razorpaySignature?: string;
+  // Subscription-specific fields
+  razorpaySubscriptionId?: string;
+  subscriptionStatus?: 'active' | 'cancelled' | 'expired' | 'paused';
+  isRecurring?: boolean;
+  nextBillingDate?: string;
+  billingCycle?: 'monthly' | 'quarterly' | 'yearly';
+  subscriptionStartDate?: string;
+  subscriptionEndDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Subscription {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  subscriptionStatus: 'active' | 'cancelled' | 'expired' | 'paused';
+  subscriptionPlan: 'monthly' | 'quarterly' | 'yearly';
+  subscriptionStartDate: string;
+  subscriptionEndDate?: string;
+  razorpaySubscriptionId: string;
+  cancelledAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -173,6 +196,25 @@ export default function AdminPayments() {
     
     const config = methodConfig[method as keyof typeof methodConfig] || methodConfig.razorpay;
     return <Badge className={config.className}>{config.label}</Badge>;
+  };
+
+  const getTypeBadge = (payment: Payment) => {
+    const isSubscription = payment.razorpaySubscriptionId || payment.isRecurring;
+    
+    if (isSubscription) {
+      const subscriptionConfig = {
+        active: { label: 'Subscription', className: 'bg-green-100 text-green-800' },
+        cancelled: { label: 'Cancelled Sub', className: 'bg-red-100 text-red-800' },
+        expired: { label: 'Expired Sub', className: 'bg-gray-100 text-gray-800' },
+        paused: { label: 'Paused Sub', className: 'bg-yellow-100 text-yellow-800' }
+      };
+      
+      const status = payment.subscriptionStatus || 'active';
+      const config = subscriptionConfig[status as keyof typeof subscriptionConfig] || subscriptionConfig.active;
+      return <Badge className={config.className}>{config.label}</Badge>;
+    }
+    
+    return <Badge className="bg-gray-100 text-gray-800">One-time</Badge>;
   };
 
   const exportPayments = () => {
@@ -411,6 +453,7 @@ export default function AdminPayments() {
                     <TableHead>Status</TableHead>
                     <TableHead>Method</TableHead>
                     <TableHead>Plan</TableHead>
+                    <TableHead>Type</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
@@ -444,6 +487,14 @@ export default function AdminPayments() {
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">{payment.planName}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {getTypeBadge(payment)}
+                        {payment.razorpaySubscriptionId && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            Sub: {payment.razorpaySubscriptionId.slice(-8)}
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center text-sm">

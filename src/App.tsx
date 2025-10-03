@@ -27,6 +27,7 @@ import AdminSubjects from "./pages/admin/Subjects";
 import AdminVideos from "./pages/admin/Videos";
 import AdminUsers from "./pages/admin/Users";
 import AdminPayments from "./pages/admin/Payments";
+import AdminSubscriptions from "./pages/admin/AdminSubscriptions";
 import AdminLogin from "./pages/admin/AdminLogin";
 import { ProtectedAdminRoute } from "./components/auth/ProtectedAdminRoute";
 
@@ -120,7 +121,8 @@ const App = () => (
                 <Route path="/admin/subjects" element={<AdminSubjects />} />
                 <Route path="/admin/videos" element={<AdminVideos />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
-                <Route path="/admin/payments" element={<AdminPayments />} />
+                {/* <Route path="/admin/payments" element={<AdminPayments />} /> */}
+                <Route path="/admin/subscriptions" element={<AdminSubscriptions />} />
               </Route>
             <Route path="/groups" element={
                 <ProtectedRoute>

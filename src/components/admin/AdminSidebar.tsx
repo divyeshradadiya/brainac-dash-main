@@ -16,7 +16,8 @@ import {
   ChevronRight,
   CreditCard,
   FileText,
-  Shield
+  Shield,
+  Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -50,10 +51,16 @@ const adminMenuItems = [
     href: '/admin/videos',
     badge: null
   },
+  // {
+  //   title: 'Payments',
+  //   icon: CreditCard,
+  //   href: '/admin/payments',
+  //   badge: null
+  // },
   {
-    title: 'Payments',
-    icon: CreditCard,
-    href: '/admin/payments',
+    title: 'Subscriptions',
+    icon: Calendar,
+    href: '/admin/subscriptions',
     badge: null
   }
 ];

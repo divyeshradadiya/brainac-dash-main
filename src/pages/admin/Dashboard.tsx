@@ -42,14 +42,39 @@ interface DashboardStats {
   userGrowthByMonth: any[];
 }
 
+interface SubscriptionAnalytics {
+  overview: {
+    activeSubscriptions: number;
+    cancelledSubscriptions: number;
+    expiredSubscriptions: number;
+    totalSubscriptions: number;
+  };
+  revenue: {
+    mrr: number;
+    currency: string;
+  };
+  planDistribution: {
+    monthly: number;
+    quarterly: number;
+    yearly: number;
+  };
+  metrics: {
+    churnRate: number;
+    newSubscriptions30Days: number;
+    growthRate: number;
+  };
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [subscriptionAnalytics, setSubscriptionAnalytics] = useState<SubscriptionAnalytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch real data from API
   useEffect(() => {
     fetchDashboardStats();
+    fetchSubscriptionAnalytics();
   }, []);
 
   const fetchDashboardStats = async () => {
@@ -66,9 +91,19 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchSubscriptionAnalytics = async () => {
+    try {
+      const response = await adminApiService.getSubscriptionAnalytics();
+      console.log('Dashboard analytics response:', response); // Debug log
+      setSubscriptionAnalytics(response); // response is already the data object from makeRequest
+    } catch (error) {
+      console.error('Failed to fetch subscription analytics:', error);
+    }
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/20 flex items-center justify-center">
+      <div className="min-h-screen  bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/20 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading dashboard...</p>
@@ -173,6 +208,77 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Subscription Analytics Section */}
+        {subscriptionAnalytics && (
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Subscription Analytics</h2>
+              <Button variant="outline" size="sm" onClick={() => window.location.href = '/admin/subscriptions'}>
+                View All Subscriptions
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-600">Monthly Recurring Revenue</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">
+                    ₹{subscriptionAnalytics.revenue.mrr.toLocaleString()}
+                  </div>
+                  <p className="text-xs text-gray-500">Per month</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-600">Churn Rate</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-red-600">
+                    {subscriptionAnalytics.metrics.churnRate}%
+                  </div>
+                  <p className="text-xs text-gray-500">Last 30 days</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-600">New Subscriptions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {subscriptionAnalytics.metrics.newSubscriptions30Days}
+                  </div>
+                  <p className="text-xs text-gray-500">Last 30 days</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-600">Plan Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span>Monthly</span>
+                      <span className="font-medium">{subscriptionAnalytics.planDistribution.monthly}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Quarterly</span>
+                      <span className="font-medium">{subscriptionAnalytics.planDistribution.quarterly}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Yearly</span>
+                      <span className="font-medium">{subscriptionAnalytics.planDistribution.yearly}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
 
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
