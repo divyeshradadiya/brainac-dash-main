@@ -42,6 +42,34 @@ class AdminApiService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        
+        // Handle token expiry/authentication errors for admin
+        if (response.status === 401) {
+          console.log('Admin authentication failed:', errorData);
+          
+          // Check for specific token expiry codes
+          if (errorData.code === 'TOKEN_EXPIRED' || 
+              errorData.code === 'INVALID_TOKEN' || 
+              errorData.code === 'AUTH_FAILED' ||
+              errorData.message?.includes('expired') ||
+              errorData.message?.includes('Invalid token')) {
+            
+            console.log('Admin token expired or invalid, redirecting to admin login...');
+            
+            // Clear admin tokens
+            localStorage.removeItem('brainac_admin_token');
+            localStorage.removeItem('brainac_admin_email');
+            
+            // Redirect to admin login page
+            if (typeof window !== 'undefined') {
+              window.location.href = '/admin/login';
+            }
+            
+            // Throw a specific error for any calling code
+            throw new Error('Admin authentication expired. Redirecting to login page.');
+          }
+        }
+        
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
